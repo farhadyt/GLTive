@@ -1,0 +1,1427 @@
+GLTive Platform
+Module 01 — Stock / Inventory Foundation
+Data Model & Field Dictionary v1.0
+1. Sənədin məqsədi
+
+Bu sənəd aşağıdakıları dəqiq müəyyən edir:
+
+Module 01 üçün əsas entity-lər
+hər entity üzrə bütün field-lər
+field type-ları
+required/optional status
+default dəyərlər
+validation qaydaları
+unique məhdudiyyətlər
+foreign key əlaqələri
+index tövsiyələri
+soft delete davranışı
+audit davranışı
+gələcək modullara açıq qalacaq linkage nöqtələri
+
+Bu sənəd DB truth document rolunu oynayır.
+
+2. Ümumi model prinsipləri
+2.1. Company scope
+
+Bütün əsas business entity-lər company scope ilə işləməlidir.
+
+2.2. Soft delete
+
+Master entity-lərdə hard delete istifadə olunmamalıdır.
+
+2.3. Immutable movement history
+
+Stock movement cədvəli dəyişdirilməməli və silinməməlidir.
+
+2.4. Serialized və quantity-based ayrılığı
+
+Serialized item-lər ayrıca serial unit səviyyəsində izlənməlidir.
+
+2.5. Audit readiness
+
+Bütün write əməliyyatlar audit ilə müşayiət olunmalıdır.
+
+2.6. Localization readiness
+
+DB-də istifadəçiyə görünən statik etiketlər hardcoded localization ilə yox, key-based UI ilə həll olunmalıdır. DB yalnız business data saxlamalıdır.
+
+3. Shared technical conventions
+
+Aşağıdakı konvensiyalar bütün entity-lərdə tətbiq olunmalıdır.
+
+3.1. ID tipi
+uuid
+primary key
+3.2. Timestamp field-lər
+
+Əksər entity-lərdə:
+
+created_at → datetime with timezone
+updated_at → datetime with timezone
+3.3. User tracking
+
+Uyğun olduqda:
+
+created_by_id → FK to user
+updated_by_id → FK to user
+3.4. Company ownership
+
+Business entity-lərdə:
+
+company_id → FK to company
+3.5. Active status
+
+Master entity-lərdə:
+
+is_active → boolean, default true
+3.6. Soft delete field-ləri
+
+Master entity-lərdə:
+
+is_deleted → boolean, default false
+deleted_at → datetime nullable
+deleted_by_id → FK nullable
+3.7. Notes
+
+Optional human notes üçün:
+
+notes → text nullable
+4. Entity siyahısı
+
+Bu modul üçün əsas entity-lər:
+
+stock_item_categories
+brands
+vendor_references
+item_models
+warehouses
+stock_items
+stock_serial_units
+stock_movements
+stock_adjustment_sessions
+stock_adjustment_lines
+stock_alert_rules
+stock_alert_events
+5. Entity-by-entity Field Dictionary
+5.1. stock_item_categories
+Məqsəd
+
+Item kateqoriyalarını saxlamaq və hierarchical category tree dəstəyi vermək.
+
+Table name
+
+stock_item_categories
+
+Field-lər
+id
+type: uuid
+required: yes
+primary key: yes
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+parent_category_id
+type: uuid
+required: no
+FK: stock_item_categories.id
+index: yes
+code
+type: varchar(50)
+required: yes
+unique scope: company_id + code
+validation:
+boş ola bilməz
+trim olunmalıdır
+böyük/kiçik hərf normalized saxlanmalıdır
+index: yes
+name
+type: varchar(150)
+required: yes
+validation:
+boş ola bilməz
+2–150 simvol
+index: yes
+description
+type: text
+required: no
+sort_order
+type: integer
+required: yes
+default: 0
+is_active
+type: boolean
+required: yes
+default: true
+index: yes
+is_deleted
+type: boolean
+required: yes
+default: false
+index: yes
+deleted_at
+type: datetime
+required: no
+deleted_by_id
+type: uuid
+required: no
+FK: user
+created_at
+type: datetime
+required: yes
+updated_at
+type: datetime
+required: yes
+created_by_id
+type: uuid
+required: no
+FK: user
+updated_by_id
+type: uuid
+required: no
+FK: user
+Unique constraints
+(company_id, code) unique where is_deleted = false
+Index-lər
+(company_id, is_active, is_deleted)
+(company_id, parent_category_id)
+(company_id, name)
+Business validations
+parent_category eyni company daxilində olmalıdır
+cyclic hierarchy qadağandır
+deactivate edilən category aktiv child-lar və aktiv model-lər ilə relation-dadırsa block və ya warning strategy tətbiq olunmalıdır
+Soft delete davranışı
+allowed
+child records varsa hard delete qadağandır
+Audit
+create/update/deactivate/delete audit olunmalıdır
+5.2. brands
+Məqsəd
+
+Marka/istehsalçı referenslərini saxlamaq
+
+Table name
+
+brands
+
+Field-lər
+id
+type: uuid
+required: yes
+primary key: yes
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+name
+type: varchar(150)
+required: yes
+validation:
+boş ola bilməz
+trim edilməlidir
+index: yes
+normalized_name
+type: varchar(150)
+required: yes
+validation:
+lower-case normalized
+index: yes
+description
+type: text
+required: no
+website
+type: varchar(255)
+required: no
+validation:
+valid URL format if present
+is_active
+type: boolean
+default: true
+index: yes
+is_deleted
+type: boolean
+default: false
+index: yes
+deleted_at
+type: datetime
+required: no
+deleted_by_id
+type: uuid
+required: no
+FK: user
+created_at
+type: datetime
+required: yes
+updated_at
+type: datetime
+required: yes
+created_by_id
+type: uuid
+required: no
+FK: user
+updated_by_id
+type: uuid
+required: no
+FK: user
+Unique constraints
+(company_id, normalized_name) unique where is_deleted = false
+Index-lər
+(company_id, is_active, is_deleted)
+(company_id, normalized_name)
+Soft delete
+allowed
+Audit
+create/update/deactivate/delete audit olunmalıdır
+5.3. vendor_references
+Məqsəd
+
+Lightweight vendor referensləri saxlamaq
+
+Table name
+
+vendor_references
+
+Field-lər
+id
+type: uuid
+primary key
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+name
+type: varchar(180)
+required: yes
+index: yes
+normalized_name
+type: varchar(180)
+required: yes
+index: yes
+code
+type: varchar(50)
+required: no
+index: yes
+contact_person
+type: varchar(150)
+required: no
+email
+type: varchar(255)
+required: no
+validation:
+email format if present
+phone
+type: varchar(50)
+required: no
+address
+type: text
+required: no
+notes
+type: text
+required: no
+is_active
+type: boolean
+default: true
+index: yes
+is_deleted
+type: boolean
+default: false
+index: yes
+deleted_at
+type: datetime
+required: no
+deleted_by_id
+type: uuid
+required: no
+FK: user
+created_at
+type: datetime
+required: yes
+updated_at
+type: datetime
+required: yes
+created_by_id
+type: uuid
+required: no
+FK: user
+updated_by_id
+type: uuid
+required: no
+FK: user
+Unique constraints
+(company_id, normalized_name) unique where is_deleted = false
+(company_id, code) unique where code is not null and is_deleted = false
+Index-lər
+(company_id, is_active, is_deleted)
+(company_id, normalized_name)
+(company_id, code)
+Soft delete
+allowed
+Audit
+create/update/deactivate/delete audit olunmalıdır
+5.4. item_models
+Məqsəd
+
+Stok item-in standart model səviyyəli təsviri
+
+Table name
+
+item_models
+
+Field-lər
+id
+type: uuid
+primary key
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+category_id
+type: uuid
+required: yes
+FK: stock_item_categories
+index: yes
+brand_id
+type: uuid
+required: no
+FK: brands
+index: yes
+vendor_reference_id
+type: uuid
+required: no
+FK: vendor_references
+index: yes
+model_name
+type: varchar(180)
+required: yes
+validation:
+boş ola bilməz
+model_code
+type: varchar(80)
+required: no
+index: yes
+normalized_model_name
+type: varchar(180)
+required: yes
+index: yes
+description
+type: text
+required: no
+default_unit
+type: varchar(30)
+required: yes
+default: pcs
+validation:
+allowed values initial set:
+pcs
+box
+pack
+meter
+liter
+kg
+future extensible
+tracking_type
+type: varchar(30)
+required: yes
+validation:
+allowed:
+quantity_based
+serialized
+index: yes
+minimum_stock_level
+type: decimal(14,2)
+required: no
+validation:
+
+= 0
+
+image_url
+type: varchar(500)
+required: no
+is_active
+type: boolean
+default: true
+index: yes
+is_deleted
+type: boolean
+default: false
+index: yes
+deleted_at
+type: datetime
+required: no
+deleted_by_id
+type: uuid
+required: no
+FK: user
+created_at
+type: datetime
+required: yes
+updated_at
+type: datetime
+required: yes
+created_by_id
+type: uuid
+required: no
+FK: user
+updated_by_id
+type: uuid
+required: no
+FK: user
+Unique constraints
+
+Recommended:
+
+(company_id, category_id, normalized_model_name, brand_id) unique where is_deleted = false
+(company_id, model_code) unique where model_code is not null and is_deleted = false
+Index-lər
+(company_id, category_id, is_active, is_deleted)
+(company_id, tracking_type, is_active, is_deleted)
+(company_id, normalized_model_name)
+Business validations
+category eyni company daxilində olmalıdır
+brand/vendor varsa eyni company daxilində olmalıdır
+serialized model üçün gələcək stock items serialized məntiqlə işləməlidir
+Soft delete
+allowed
+Audit
+create/update/deactivate/delete audit olunmalıdır
+5.5. warehouses
+Məqsəd
+
+Anbar və stok saxlanma məntəqələrini saxlamaq
+
+Table name
+
+warehouses
+
+Field-lər
+id
+type: uuid
+primary key
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+code
+type: varchar(50)
+required: yes
+unique scope: company
+index: yes
+name
+type: varchar(150)
+required: yes
+index: yes
+location_reference_id
+type: uuid
+required: no
+FK: future locations entity
+index: yes
+note:
+nullable in Phase 1
+description
+type: text
+required: no
+is_default
+type: boolean
+required: yes
+default: false
+index: yes
+is_active
+type: boolean
+default: true
+index: yes
+is_deleted
+type: boolean
+default: false
+index: yes
+deleted_at
+type: datetime
+required: no
+deleted_by_id
+type: uuid
+required: no
+FK: user
+created_at
+type: datetime
+required: yes
+updated_at
+type: datetime
+required: yes
+created_by_id
+type: uuid
+required: no
+FK: user
+updated_by_id
+type: uuid
+required: no
+FK: user
+Unique constraints
+(company_id, code) unique where is_deleted = false
+Index-lər
+(company_id, is_active, is_deleted)
+(company_id, is_default, is_active, is_deleted)
+Business validations
+hər company üçün yalnız 1 default warehouse olmalıdır
+deactivated warehouse üzərində yeni movement aparılmamalıdır
+Soft delete
+allowed, but if stock exists require business rule check
+Audit
+create/update/deactivate/delete audit olunmalıdır
+5.6. stock_items
+Məqsəd
+
+Anbar səviyyəsində izlənən real stok item qeydləri
+
+Table name
+
+stock_items
+
+Field-lər
+id
+type: uuid
+primary key
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+item_model_id
+type: uuid
+required: yes
+FK: item_models
+index: yes
+warehouse_id
+type: uuid
+required: yes
+FK: warehouses
+index: yes
+internal_code
+type: varchar(80)
+required: no
+index: yes
+item_name_override
+type: varchar(180)
+required: no
+tracking_type
+type: varchar(30)
+required: yes
+validation:
+quantity_based
+serialized
+index: yes
+quantity_on_hand
+type: decimal(14,2)
+required: yes
+default: 0
+validation:
+
+= 0
+
+quantity_reserved
+type: decimal(14,2)
+required: yes
+default: 0
+validation:
+
+= 0
+
+quantity_available
+type: decimal(14,2)
+required: yes
+default: 0
+note:
+computed and stored or computed at service level
+validation:
+
+= 0
+
+minimum_stock_level_override
+type: decimal(14,2)
+required: no
+validation:
+
+= 0
+
+notes
+type: text
+required: no
+is_active
+type: boolean
+default: true
+index: yes
+is_deleted
+type: boolean
+default: false
+index: yes
+deleted_at
+type: datetime
+required: no
+deleted_by_id
+type: uuid
+required: no
+FK: user
+created_at
+type: datetime
+required: yes
+updated_at
+type: datetime
+required: yes
+created_by_id
+type: uuid
+required: no
+FK: user
+updated_by_id
+type: uuid
+required: no
+FK: user
+Unique constraints
+
+Recommended:
+
+(company_id, warehouse_id, item_model_id) unique where is_deleted = false
+
+Optional:
+
+(company_id, internal_code) unique where internal_code is not null and is_deleted = false
+Index-lər
+(company_id, warehouse_id, is_active, is_deleted)
+(company_id, item_model_id, is_active, is_deleted)
+(company_id, tracking_type)
+(company_id, quantity_available)
+Business validations
+tracking_type must match linked item_model.tracking_type
+warehouse və model eyni company daxilində olmalıdır
+quantity_available = quantity_on_hand - quantity_reserved
+quantity_reserved > quantity_on_hand ola bilməz
+Soft delete
+allowed only if business-safe
+historical movements qalmalıdır
+Audit
+create/update/deactivate/delete audit olunmalıdır
+5.7. stock_serial_units
+Məqsəd
+
+Serialized stock item-lərin individual vahidlərini saxlamaq
+
+Table name
+
+stock_serial_units
+
+Field-lər
+id
+type: uuid
+primary key
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+stock_item_id
+type: uuid
+required: yes
+FK: stock_items
+index: yes
+warehouse_id
+type: uuid
+required: yes
+FK: warehouses
+index: yes
+note:
+denormalized for fast filtering
+must mirror stock_item warehouse on current state
+serial_number
+type: varchar(150)
+required: yes
+index: yes
+asset_tag_candidate
+type: varchar(100)
+required: no
+index: yes
+condition_status
+type: varchar(30)
+required: yes
+default: new
+validation:
+new
+good
+used
+damaged
+defective
+stock_status
+type: varchar(30)
+required: yes
+default: in_stock
+validation:
+in_stock
+reserved
+issued
+damaged
+retired
+index: yes
+received_at
+type: datetime
+required: no
+notes
+type: text
+required: no
+is_deleted
+type: boolean
+default: false
+index: yes
+deleted_at
+type: datetime
+required: no
+deleted_by_id
+type: uuid
+required: no
+FK: user
+created_at
+type: datetime
+required: yes
+updated_at
+type: datetime
+required: yes
+created_by_id
+type: uuid
+required: no
+FK: user
+updated_by_id
+type: uuid
+required: no
+FK: user
+Unique constraints
+(company_id, serial_number) unique where is_deleted = false
+
+Optional:
+
+(company_id, asset_tag_candidate) unique where asset_tag_candidate is not null and is_deleted = false
+Index-lər
+(company_id, stock_item_id, stock_status, is_deleted)
+(company_id, warehouse_id, stock_status, is_deleted)
+(company_id, serial_number)
+Business validations
+yalnız tracking_type = serialized olan stock_item-lər üçün yaradıla bilər
+warehouse_id stock_item warehouse ilə uyğun olmalıdır
+stock_status dəyişəndə audit mütləqdir
+issued olan serial unit normal stock issue flow ilə track olunmalıdır
+Soft delete
+generally avoid hard delete
+delete instead of retire edilməməlidir
+future asset linkage üçün history saxlanmalıdır
+Audit
+create/status change/note change/delete audit olunmalıdır
+5.8. stock_movements
+Məqsəd
+
+Bütün stok hərəkətlərinin immutable tarixçəsi
+
+Table name
+
+stock_movements
+
+Field-lər
+id
+type: uuid
+primary key
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+movement_type
+type: varchar(30)
+required: yes
+validation:
+stock_in
+stock_out
+transfer_in
+transfer_out
+adjustment_plus
+adjustment_minus
+reserve
+release_reserve
+index: yes
+stock_item_id
+type: uuid
+required: yes
+FK: stock_items
+index: yes
+stock_serial_unit_id
+type: uuid
+required: no
+FK: stock_serial_units
+index: yes
+source_warehouse_id
+type: uuid
+required: no
+FK: warehouses
+index: yes
+target_warehouse_id
+type: uuid
+required: no
+FK: warehouses
+index: yes
+quantity
+type: decimal(14,2)
+required: yes
+validation:
+
+0
+
+unit_cost
+type: decimal(14,2)
+required: no
+validation:
+
+= 0 if present
+
+reference_type
+type: varchar(50)
+required: no
+examples:
+manual_receive
+manual_issue
+transfer
+adjustment
+procurement_receipt
+assignment
+index: yes
+reference_id
+type: uuid
+required: no
+index: yes
+reason_code
+type: varchar(50)
+required: no
+index: yes
+note
+type: text
+required: no
+performed_by_user_id
+type: uuid
+required: no
+FK: user
+index: yes
+performed_at
+type: datetime
+required: yes
+index: yes
+created_at
+type: datetime
+required: yes
+Unique constraints
+no strong business unique except PK
+optionally use idempotency strategy at service layer, not DB
+Index-lər
+(company_id, stock_item_id, performed_at desc)
+(company_id, movement_type, performed_at desc)
+(company_id, source_warehouse_id, performed_at desc)
+(company_id, target_warehouse_id, performed_at desc)
+(company_id, reference_type, reference_id)
+Business validations
+stock_serial_unit_id yalnız serialized movements üçün olmalıdır
+source/target warehouse qaydası movement type-a uyğun olmalıdır:
+stock_in → target allowed, source optional
+stock_out → source allowed, target null
+transfer_out → source required
+transfer_in → target required
+transfer scenarios ideally paired logic ilə idarə olunmalıdır
+movement update/delete qadağandır
+Soft delete
+qadağandır
+Audit
+table özü audit history-dir, amma creation action ayrıca audit log-a da düşməlidir
+5.9. stock_adjustment_sessions
+Məqsəd
+
+Sayım və düzəliş prosesini sessiya şəklində qruplaşdırmaq
+
+Table name
+
+stock_adjustment_sessions
+
+Field-lər
+id
+type: uuid
+primary key
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+warehouse_id
+type: uuid
+required: yes
+FK: warehouses
+index: yes
+session_code
+type: varchar(60)
+required: yes
+unique scope: company
+index: yes
+reason
+type: text
+required: no
+status
+type: varchar(20)
+required: yes
+default: draft
+validation:
+draft
+confirmed
+cancelled
+index: yes
+created_by_id
+type: uuid
+required: no
+FK: user
+confirmed_by_id
+type: uuid
+required: no
+FK: user
+confirmed_at
+type: datetime
+required: no
+created_at
+type: datetime
+required: yes
+updated_at
+type: datetime
+required: yes
+Unique constraints
+(company_id, session_code) unique
+Index-lər
+(company_id, warehouse_id, status)
+(company_id, created_at desc)
+Business validations
+confirmed session editable olmamalıdır
+cancelled session movement yaratmamalıdır
+session warehouse eyni company daxilində olmalıdır
+Soft delete
+not recommended
+status-based lifecycle daha düzgündür
+Audit
+create/confirm/cancel audit olunmalıdır
+5.10. stock_adjustment_lines
+Məqsəd
+
+Adjustment session daxilində item səviyyəli faktiki sayım nəticələri
+
+Table name
+
+stock_adjustment_lines
+
+Field-lər
+id
+type: uuid
+primary key
+adjustment_session_id
+type: uuid
+required: yes
+FK: stock_adjustment_sessions
+index: yes
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+stock_item_id
+type: uuid
+required: yes
+FK: stock_items
+index: yes
+expected_quantity
+type: decimal(14,2)
+required: yes
+validation:
+
+= 0
+
+counted_quantity
+type: decimal(14,2)
+required: yes
+validation:
+
+= 0
+
+difference_quantity
+type: decimal(14,2)
+required: yes
+note:
+counted - expected
+note
+type: text
+required: no
+created_at
+type: datetime
+required: yes
+updated_at
+type: datetime
+required: yes
+Unique constraints
+(adjustment_session_id, stock_item_id) unique
+Index-lər
+(company_id, stock_item_id)
+(adjustment_session_id)
+Business validations
+stock_item həmin session warehouse-a aid olmalıdır
+confirmed session line dəyişdirilməməlidir
+confirm zamanı difference əsasında stock_movements yaranmalıdır
+Soft delete
+not needed
+Audit
+create/update/confirm-derived changes audit olunmalıdır
+5.11. stock_alert_rules
+Məqsəd
+
+Stock alert qaydalarını saxlamaq
+
+Table name
+
+stock_alert_rules
+
+Field-lər
+id
+type: uuid
+primary key
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+stock_item_id
+type: uuid
+required: yes
+FK: stock_items
+index: yes
+rule_type
+type: varchar(30)
+required: yes
+validation:
+minimum_stock
+index: yes
+threshold_value
+type: decimal(14,2)
+required: yes
+validation:
+
+= 0
+
+is_active
+type: boolean
+default: true
+index: yes
+created_at
+type: datetime
+required: yes
+updated_at
+type: datetime
+required: yes
+created_by_id
+type: uuid
+required: no
+FK: user
+updated_by_id
+type: uuid
+required: no
+FK: user
+Unique constraints
+(company_id, stock_item_id, rule_type) unique where is_active = true
+Index-lər
+(company_id, rule_type, is_active)
+(company_id, stock_item_id, is_active)
+Business validations
+threshold item tracking type-dan asılı olmayaraq non-negative olmalıdır
+Soft delete
+no, deactivate ilə idarə etmək kifayətdir
+Audit
+create/update/deactivate audit olunmalıdır
+5.12. stock_alert_events
+Məqsəd
+
+Real yaranmış stock warning event-lərini saxlamaq
+
+Table name
+
+stock_alert_events
+
+Field-lər
+id
+type: uuid
+primary key
+company_id
+type: uuid
+required: yes
+FK: company
+index: yes
+stock_item_id
+type: uuid
+required: yes
+FK: stock_items
+index: yes
+alert_rule_id
+type: uuid
+required: no
+FK: stock_alert_rules
+index: yes
+alert_type
+type: varchar(30)
+required: yes
+validation:
+minimum_stock
+index: yes
+triggered_value
+type: decimal(14,2)
+required: yes
+validation:
+
+= 0
+
+threshold_value
+type: decimal(14,2)
+required: yes
+validation:
+
+= 0
+
+status
+type: varchar(20)
+required: yes
+default: open
+validation:
+open
+acknowledged
+resolved
+index: yes
+acknowledged_by_id
+type: uuid
+required: no
+FK: user
+acknowledged_at
+type: datetime
+required: no
+resolved_by_id
+type: uuid
+required: no
+FK: user
+resolved_at
+type: datetime
+required: no
+created_at
+type: datetime
+required: yes
+Unique constraints
+
+No strict unique required.
+Optional dedupe logic service layer-də olmalıdır.
+
+Index-lər
+(company_id, status, created_at desc)
+(company_id, stock_item_id, status)
+(company_id, alert_type, status)
+Business validations
+open duplicate flood qarşısı service layer ilə alınmalıdır
+resolved event yenidən open edilməməlidir; yeni event yaradılmalıdır
+Soft delete
+qadağan
+Audit
+acknowledge/resolve audit olunmalıdır
+6. Relationship map
+
+Qısa əlaqə xəritəsi:
+
+stock_item_categories 1→N item_models
+brands 1→N item_models
+vendor_references 1→N item_models
+warehouses 1→N stock_items
+item_models 1→N stock_items
+stock_items 1→N stock_serial_units
+stock_items 1→N stock_movements
+stock_adjustment_sessions 1→N stock_adjustment_lines
+stock_items 1→N stock_adjustment_lines
+stock_items 1→N stock_alert_rules
+stock_items 1→N stock_alert_events
+7. Derived field və calculation qaydaları
+7.1. quantity_available
+
+Formula:
+quantity_on_hand - quantity_reserved
+
+Tövsiyə
+
+Bu field DB-də saxlanıla bilər, amma service layer ilə həmişə uyğun saxlanmalıdır.
+Trigger və ya application transaction consistency ilə qorunmalıdır.
+
+7.2. difference_quantity
+
+Formula:
+counted_quantity - expected_quantity
+
+Bu field adjustment line-də stored ola bilər.
+
+8. Validation rules summary
+8.1. Common validations
+bütün string-lər trim olunmalıdır
+boş string-lər null/blank siyasətinə uyğun normalize olunmalıdır
+company scope FK-lər company consistency yoxlamasından keçməlidir
+8.2. Numeric validations
+quantity və threshold mənfi ola bilməz
+unit_cost mənfi ola bilməz
+reserved > on_hand ola bilməz
+8.3. Tracking validations
+serialized stock_item üçün stock_serial_units işləməlidir
+quantity_based item üçün serial unit yaratmaq olmaz
+8.4. Warehouse validations
+inactive/deleted warehouse üçün yeni movement olmaz
+transfer eyni warehouse-a aparılmamalıdır
+8.5. Status validations
+confirmed adjustment session dəyişdirilə bilməz
+immutable movement update/delete edilə bilməz
+9. Index strategiyası
+
+İlk mərhələ üçün əsas index prinsipləri:
+
+9.1. Company-scoped access
+
+Bütün böyük business cədvəllərdə company_id index mütləqdir.
+
+9.2. List page performance
+
+Aşağıdakılar üçün composite index-lər vacibdir:
+
+company + active/deleted
+company + warehouse
+company + movement_type + performed_at
+company + status
+9.3. Search-ready fields
+code
+normalized_name
+serial_number
+model_code
+internal_code
+
+üzərində index olmalıdır.
+
+10. Soft delete və hard delete siyasəti
+Soft delete istifadə ediləcək
+stock_item_categories
+brands
+vendor_references
+item_models
+warehouses
+stock_items
+stock_serial_units (yalnız xüsusi hallarda, əsasən avoid)
+Hard/immutable history
+stock_movements
+stock_alert_events
+Status-driven lifecycle
+stock_adjustment_sessions
+11. Audit davranışı
+
+Bu modul üçün audit cədvəli bu sənədin scope-u daxilində detalı ilə yazılmır, amma aşağıdakı entity action-ları audit hook tələb edir:
+
+category CRUD-like state changes
+brand CRUD-like state changes
+vendor CRUD-like state changes
+model CRUD-like state changes
+warehouse CRUD-like state changes
+stock_item create/update/deactivate
+stock receive/issue/transfer
+stock_serial_unit status change
+adjustment confirm
+alert acknowledge/resolve
+
+Audit payload-da minimum:
+
+actor
+entity_type
+entity_id
+action
+before_snapshot (uyğun olduqda)
+after_snapshot (uyğun olduqda)
+company_id
+timestamp
+12. Future extension hooks
+
+Bu data modeli aşağıdakı gələcək capability-lər üçün hazır qalmalıdır:
+
+12.1. Asset lifecycle
+stock_serial_units → future asset conversion
+12.2. Procurement
+stock_movements.reference_type/reference_id ilə procurement receipt linkage
+12.3. Workforce assignment
+stock_out/issue flow gələcək employee assignment-a bağlana bilər
+12.4. QR/barcode
+stock_items.internal_code
+stock_serial_units.asset_tag_candidate
+gələcək kodlama üçün baza ola bilər
+12.5. Reporting
+movements
+alerts
+warehouse summary
+low stock trends
+12.6. AI
+low stock prediction
+reorder suggestion
+anomaly detection
+13. Naming və schema qaydaları
+13.1. Table naming
+snake_case
+plural nouns
+consistent prefixes with stock_
+13.2. Field naming
+snake_case
+FK-lər _id ilə bitsin
+boolean-lər is_ ilə başlasın
+timestamp-lər _at ilə bitsin
+13.3. Enum handling
+
+İlk mərhələdə:
+
+DB varchar + application-level enum validation
+Bu daha elastikdir.
+14. Antigravity implementation notes
+
+Antigravity bu sənədə əsasən işləyərkən:
+
+Django models company-scoped qurulmalıdır
+Soft delete mixin master entity-lər üçün istifadə olunmalıdır
+Movement model immutable service logic ilə qorunmalıdır
+Serialized və quantity-based logic service layer-də ciddi ayrılmalıdır
+DB constraints + application validation birlikdə istifadə olunmalıdır
+List endpoint-lər üçün index-lərə uyğun query design qurulmalıdır
+Admin/UI logikası DB strukturuna zidd olmamalıdır
+Future asset/procurement hooks saxlanmalıdır, amma premature complexity əlavə olunmamalıdır
+Risklər və boşluqlar
+StockItem və ItemModel sərhədi qarışsa
+gələcək warehouse-specific inventory idarəsi zəifləyər.
+Serialized unit-lər düzgün ayrılmasa
+future asset conversion ağrılı olacaq.
+Movement immutable qurulmasa
+audit etibarı pozular.
+Company scope validation yazılmasa
+cross-company data leakage riski yaranar.
+Soft delete qaydası nizamsız olsa
+uniqueness və list view-lərdə problem çıxar.
+Index-lər əvvəldən düşünülməsə
+movement history və stock list-lər yavaşlayar.
+Tövsiyə olunan qərar
+
+Mənim professional qərarım budur:
+
+Bu field dictionary Module 01 üçün baza DB contract kimi qəbul edilməlidir.
+Antigravity ilk implementasiyanı bu sənədə əsasən yazmalıdır.
+Heç bir əlavə “sadələşdirmə” adı ilə:
+
+serialized logic
+immutable movement history
+company scoping
+soft delete
+audit readiness
+çıxarılmamalıdır.
+
+Bu hissələr sonradan əlavə ediləcək detal deyil; bunlar modulun düzgün skeletidir.

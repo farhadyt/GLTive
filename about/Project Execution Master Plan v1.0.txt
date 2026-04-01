@@ -1,0 +1,137 @@
+GLTive Platform
+Project Execution Master Plan v1.0
+1. Project məqsədi
+
+GLTive modul əsaslı, çoxdilli, on-prem deploy oluna bilən, AI dəstəkli enterprise IT operations platformasıdır. Platforma asset, stock, ticketing, infrastructure, network, monitoring, security, automation, backup orchestration və AI-assisted operations capability-lərini bir sistemdə birləşdirəcək.
+
+2. Əsas memarlıq prinsipi
+
+Platforma genişlənə bilən modular skeleton ilə qurulmalıdır.
+Heç bir modul sonradan əlavə ediləndə əsas skeleti dağıtmamalıdır.
+
+3. Əsas development qaydası
+
+Development modul-modul aparılacaq.
+Hər modul:
+
+ayrıca bounded context (məhdud məsuliyyət sahəsi)
+ayrıca service layer
+ayrıca database ownership qaydası
+localization-ready UI
+audit-ready state changes
+ilə qurulmalıdır.
+4. İlk gündən məcburi foundation qaydaları
+
+Aşağıdakılar bütün modullarda ilk gündən olmalıdır:
+
+multi-language support
+role/permission readiness
+audit logging readiness
+tenant/company separation readiness
+notification readiness
+API-first internal design
+future module activation readiness
+5. Çoxdillilik prinsipi
+
+Platforma ilk gündən i18n-ready (çoxdilli infrastruktur hazır) qurulmalıdır.
+
+Başlanğıc dillər:
+
+Azerbaijani
+Russian
+English
+Turkish
+Arabic
+
+Qaydalar:
+
+UI string-lər hardcoded yazılmamalıdır
+bütün mətnlər translation key ilə idarə olunmalıdır
+notification template-lər də localization-ready olmalıdır
+tarix, saat, rəqəm və format locale-aware olmalıdır
+Arabic üçün RTL-readiness (sağdan-sola dizayn hazırlığı) nəzərə alınmalıdır
+6. Development strategiyası
+
+İlk mərhələdə bütün platforma birdən yazılmayacaq.
+Əvvəl foundation və ilk əsas modul qurulacaq, sonra növbəti modullar əlavə olunacaq.
+
+7. İlk development modulu
+
+Module 01: Stock / Inventory Foundation
+
+Bu modul platformanın asset və lifecycle hissəsinin təməlini təşkil edəcək.
+
+İlk scope:
+
+stock items
+item categories
+item models
+brands/vendors reference
+warehouse/location relation
+quantity tracking
+stock in / stock out
+stock movement history
+serial/no-serial support
+minimum stock level
+audit trail
+multi-language UI foundation
+
+Bu modul gələcəkdə aşağıdakılar üçün baza olacaq:
+
+asset registration
+assignment/handover
+procurement
+maintenance
+disposal
+QR/barcode
+reporting
+8. Genişlənmə prinsipi
+
+Stock modulu elə qurulmalıdır ki, sonradan problemsiz əlavə olunsun:
+
+Asset Lifecycle Module
+Procurement Module
+Workforce Assignment Module
+QR/Barcode Module
+Ticketing linkage
+Reporting/Analytics linkage
+AI recommendations
+Automation workflows
+9. Kod və struktur prinsipi
+
+Project strukturu gələcək genişlənmə üçün təmiz olmalıdır:
+
+core/
+modules/
+shared/
+localization/
+audit/
+permissions/
+api/
+ui/
+integrations/
+automation/
+ai/
+
+Hər yeni modul modules/ altında ayrıca bounded şəkildə gəlməlidir.
+
+10. Phase 1 development sırası
+Foundation skeleton
+Localization foundation
+Auth/role foundation
+Stock / Inventory Foundation
+Warehouse/location base
+Audit trail base
+Asset lifecycle base
+Ticket linkage base
+11. Qəbul olunmayan yanaşmalar
+hardcoded language strings
+qarışıq modul sərhədləri
+bir modulun başqa modulun data-sını nəzarətsiz idarə etməsi
+audit-siz state changes
+sonradan localization əlavə etmək
+gələcək genişlənməni nəzərə almadan sadə CRUD yazmaq
+12. Bu planın rolu
+
+Bu sənəd development üçün istiqamətverici əsas sənəddir.
+Bütün gələcək prompt-lar, modul task-ları və implementasiya addımları bu sənədə uyğun hazırlanmalıdır.

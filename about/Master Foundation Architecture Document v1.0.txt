@@ -1,0 +1,945 @@
+GLTive Platform
+Master Foundation Architecture Document v1.0
+1. Sənədin statusu və məqsədi
+
+Bu sənəd GLTive platformasının:
+
+məhsul istiqamətini
+memarlıq skeletini
+modullarını
+AI modelini
+təhlükəsizlik modelini
+licensing və activation modelini
+pricing məntiqini
+backup/recovery yanaşmasını
+genişlənmə qaydasını
+Phase 1 başlanğıcını
+
+vahid sistem kimi bağlamaq üçün hazırlanıb.
+
+Bu sənəd:
+
+kod deyil
+roadmap detalı deyil
+prompt deyil
+UI təsviri deyil
+
+Bu sənəd əsas platforma konstitusiyasıdır.
+
+2. Platformanın missiyası
+
+GLTive platformasının məqsədi şirkətlər üçün aşağıdakı capability-ləri vahid sistemdə birləşdirməkdir:
+
+IT asset idarəetməsi
+ticketing və service operations
+infrastructure və network visibility
+monitoring və event intelligence
+security / SOC əsasları
+AI-assisted operations
+automation və self-healing
+backup orchestration və recovery control
+vendor-controlled on-prem productization
+multi-tenant commercial packaging
+
+Platforma bazara “sadə helpdesk” kimi yox, AI-driven enterprise IT operations platform kimi çıxmalıdır.
+
+3. Əsas məhsul prinsipləri
+3.1. Capability-first design
+
+Platforma ekranlara görə yox, capability-lərə görə qurulacaq.
+
+3.2. Multi-tenant by design
+
+Tenant (müştəri şirkət) ayrımı bütün sistemin bünövrəsidir.
+
+3.3. Productized on-prem architecture
+
+Sistem yalnız daxili istifadə üçün yox, lokal mühitə quraşdırılıb satılan kommersiya məhsulu kimi qurulacaq.
+
+3.4. AI as controlled infrastructure
+
+AI sadəcə chat deyil; policy, audit, routing və approval ilə idarə olunan capability olacaq.
+
+3.5. Security and audit first
+
+Security, audit, licensing, activation və admin separation ilk gündən nəzərə alınacaq.
+
+3.6. Extensible without rebuild
+
+Sonradan yeni modul və yeni capability əlavə etmək sistemin skeletini dağıtmamalıdır.
+
+3.7. Core data stays with customer
+
+Müştərinin operational datası lokal mühitdə qalacaq. Vendor tərəfə yalnız licensing/commercial control metadata çıxacaq.
+
+4. Məhsulun yüksək səviyyəli identifikasiyası
+Məhsul tipi
+
+On-prem deployable, vendor-controlled, modular enterprise platform
+
+Əsas istifadəçi qrupları
+Vendor Platform Admin
+Customer Company Admin
+IT Technician
+Security Analyst
+Operations Manager
+Executive / rəhbərlik
+Field/mobile operator
+HR-linked onboarding/offboarding operator
+Əsas deployment modeli
+Connected On-Prem
+Air-Gapped / Offline On-Prem
+Əsas commercial modeli
+base platform
+modular activation
+resource-based pricing
+site/instance factor
+premium AI / SOC / advanced modules
+5. Source Capability Architecture
+
+Aşağıdakı capability-lər platformanın həqiqi source architecture xəritəsidir.
+
+5.1. Platform Core Layer
+
+Məqsəd: sistemin nüvəsi
+
+Daxildir:
+
+tenant management
+company registry
+authentication
+authorization
+role & permission engine
+subscription / entitlement foundation
+feature flags
+session policy
+API governance
+global settings
+usage metering foundation
+5.2. Platform Admin Layer
+
+Məqsəd: vendorun daxili super-admin idarəetməsi
+
+Daxildir:
+
+tenant onboarding
+package assignment
+license control
+support access governance
+tenant quota control
+platform-wide visibility
+activation history
+global audit access
+5.3. Company Management Layer
+
+Məqsəd: müştəri şirkətin daxili idarəsi
+
+Daxildir:
+
+company profile
+internal settings
+working calendar
+local admin model
+company dashboard
+internal business rules
+5.4. Dynamic Structure Engine
+
+Məqsəd: istənilən şirkət strukturunu sərt modellərsiz qurmaq
+
+Daxildir:
+
+hierarchy builder
+custom unit types
+optional structure levels
+templates
+one-person company mode
+matrix structure support
+reorganization history
+5.5. Workforce & Identity Lifecycle
+
+Məqsəd: işçi həyat dövrü + access + asset məsuliyyəti
+
+Daxildir:
+
+employee profile
+joiner / mover / leaver
+onboarding
+offboarding
+contractor handling
+access linkage
+asset issue/return coordination
+manager hierarchy
+delegation/substitution
+probation / suspension / termination
+5.6. Location & Facility Layer
+
+Məqsəd: fiziki məkanların idarəsi
+
+Daxildir:
+
+branch/campus/building/floor/room/desk
+zone model
+warehouse location
+rack-room mapping
+asset location mapping
+movement history
+5.7. Asset, Inventory & Lifecycle
+
+Məqsəd: bütün fiziki aktivlərin tam həyat dövrü
+
+Daxildir:
+
+asset registry
+categories/models/vendors
+serial/barcode/QR
+stock/inventory
+receiving/tagging
+assignment/handover
+return/reclaim
+maintenance/repair
+warranty
+replacement planning
+disposal/write-off
+lease/rent tracking
+lifecycle history
+5.8. Procurement & Vendor Flow
+
+Məqsəd: tələb → satınalma → qəbul → istismara vermə zənciri
+
+Daxildir:
+
+purchase request
+budget reference
+approval chain
+vendor registry
+purchase order linkage
+receiving/acceptance
+contract linkage
+renewal / replacement planning
+5.9. Infrastructure & Endpoint Layer
+
+Məqsəd: server, PC, laptop, VM və endpoint visibility
+
+Daxildir:
+
+server inventory
+desktop/laptop inventory
+VM inventory
+storage node registry
+printer/device registry
+OS/software inventory
+patch state
+endpoint health
+agent telemetry
+agentless discovery hooks
+5.10. Network & Connectivity Layer
+
+Məqsəd: şəbəkə və əlaqə obyektlərinin idarəsi
+
+Daxildir:
+
+switch/router/firewall/AP inventory
+port/interface inventory
+IPAM foundation
+VLAN/subnet mapping
+topology basis
+SNMP/syslog intake
+connectivity status
+interface utilization
+5.11. Ticketing & Service Management
+
+Məqsəd: support və service operations
+
+Daxildir:
+
+incident management
+service requests
+approval workflows
+SLA engine
+escalation logic
+technician queue
+change request basis
+problem reference
+ticket linkage to assets/users/CI
+5.12. Monitoring, Event & Observability
+
+Məqsəd: health, alert, telemetry və event intelligence
+
+Daxildir:
+
+health checks
+service checks
+threshold policies
+event ingestion
+alert generation
+event normalization
+severity classification
+correlation basis
+availability timeline
+5.13. Security / SOC
+
+Məqsəd: security alert, investigation və response
+
+Daxildir:
+
+SIEM integration
+security alert intake
+IOC/threat intel
+alert triage
+case management
+analyst workflow
+evidence linkage
+response recommendation
+SOAR foundation
+5.14. AI Core / Local AI Infrastructure
+
+Məqsəd: AI capability-lərin texniki və idarə olunan bazası
+
+Daxildir:
+
+local AI runtime
+model hosting/registry/versioning
+inference orchestration
+model routing
+local/cloud fallback
+prompt policy engine
+context engine
+memory isolation
+tool calling fabric
+AI safety controls
+AI approval policy
+AI logging
+tenant AI governance
+5.15. AI Product Features
+
+Məqsəd: AI-nin biznes və əməliyyat dəyəri yaradan hissəsi
+
+Daxildir:
+
+AI ticket triage
+AI summaries
+AI incident explanation
+AI asset query assistant
+AI ops copilot
+AI SOC copilot
+AI executive briefing
+AI recommendation engine
+AI workflow suggestions
+AI root-cause support
+5.16. Automation & Action Orchestration
+
+Məqsəd: platformanın kontrollu şəkildə hərəkət etməsi
+
+Daxildir:
+
+workflow engine
+rule engine
+action engine
+policy engine
+safe mode
+approval mode
+auto mode
+rollback logic
+endpoint/network/security hooks
+human-in-the-loop controls
+5.17. Integration Layer
+
+Məqsəd: xarici sistemlərlə əlaqə
+
+Daxildir:
+
+AD/LDAP
+email/SMS connectors
+webhooks
+API integrations
+CSV/Excel import/export
+Wazuh/MISP integrations
+monitoring connectors
+ERP/HR connector foundation
+hypervisor/NVR/backup target connectors
+5.18. Mobile & Access Channels
+
+Məqsəd: mobil və sürətli əməliyyat çıxış kanalları
+
+Daxildir:
+
+mobile app
+executive mobile dashboard
+push notifications
+QR onboarding
+asset scan
+ticket/approval actions
+field support flows
+5.19. Reporting & Analytics
+
+Məqsəd: rəhbərlik, əməliyyat və kommersiya görünürlüğü
+
+Daxildir:
+
+executive dashboard
+operational dashboard
+asset/ticket/infra/security analytics
+AI usage analytics
+consumption analytics
+KPI builder
+exports
+scheduled reports
+5.20. Notification & Communication
+
+Məqsəd: bütün bildiriş və kommunikasiya axınının idarəsi
+
+Daxildir:
+
+in-app/email/SMS/push/webhook notifications
+template engine
+multilingual templates
+delivery tracking
+retry policies
+escalation notifications
+digest mode
+user preference management
+quiet hours policy
+5.21. Localization & Language Enablement
+
+Məqsəd: çoxdilli və region-ready məhsul
+
+Daxildir:
+
+UI string localization
+notification localization
+report localization
+locale formats
+fallback rules
+translation governance
+RTL readiness foundation
+5.22. Deployment & Productization
+
+Məqsəd: məhsulun quraşdırılması, aktivləşdirilməsi, yenilənməsi
+
+Daxildir:
+
+installer/setup
+environment bootstrap
+tenant activation flow
+license activation
+launcher/service manager
+agent distribution
+update manager
+version compatibility control
+packaging model
+offline/on-prem support
+5.23. Disaster Recovery & Business Continuity
+
+Məqsəd: nasazlıq zamanı bərpa və davamlılıq
+
+Daxildir:
+
+HA/failover model
+DB replication strategy
+RPO/RTO policies
+backup validation
+restore drills
+continuity planning
+recovery runbooks
+secondary environment policy
+5.24. Data, Audit & Compliance
+
+Məqsəd: audit izi, retention və compliance
+
+Daxildir:
+
+transactional data governance
+immutable audit logs
+retention policies
+legal hold foundation
+AI audit traces
+approval/action evidence
+tenant data isolation controls
+compliance exports
+5.25. Data Migration & Portability
+
+Məqsəd: köhnə sistemdən keçid və çıxış portabiliyası
+
+Daxildir:
+
+inbound migration
+mapping tools
+validation tools
+bulk import
+outbound export
+portability workflows
+dry-run support
+migration audit trail
+5.26. CMDB / Configuration Relationship Intelligence
+
+Məqsəd: bütün obyektlər arasındakı əlaqələri görmək
+
+Daxildir:
+
+configuration item model
+relationship graph
+service-to-asset mapping
+host-to-VM mapping
+asset-to-location mapping
+network dependency
+ticket-to-CI linkage
+incident impact graph
+blast radius basis
+5.27. Backup Orchestration & Recovery Control
+
+Məqsəd: şirkətin backup proseslərini mərkəzi şəkildə idarə etmək
+
+Daxildir:
+
+backup policy engine
+schedule manager
+retention control
+backup scope selection
+storage target configuration
+restore console
+recovery validation
+backup health monitoring
+orchestration for:
+VM backup
+file/server backup
+database backup
+network config backup
+NVR/camera archive control
+backup audit trails
+
+Prinsip: platforma bütün backup data storage sisteminin özü olmayacaq; platforma backup orchestration və recovery control plane olacaq.
+
+5.28. Email Security & Ransomware Protection
+
+Məqsəd: email-dən başlayan zərərli zənciri dayandırmaq və məhdudlaşdırmaq
+
+Daxildir:
+
+anti-phishing
+anti-spoofing
+SPF/DKIM/DMARC checks
+attachment sandboxing
+safe link scanning
+archive/password-protected file policy
+risk banners
+quarantine
+mail-to-endpoint-to-SOC correlation
+ransomware playbook triggers
+
+Prinsip: məhsul “100% qarşısını alırıq” deməməlidir; doğru iddia çoxqatlı detection, isolation və containment olmalıdır.
+
+6. WOW və fərqləndirici capability-lər
+
+Platformanın bazarda fərqlənməsi üçün aşağıdakı capability-lər strateji prioritetdir:
+
+6.1. Predictive Failure
+
+Avadanlıq sıradan çıxmamış riskin əvvəlcədən aşkarlanması.
+
+6.2. Auto-Documentation
+
+Şəbəkə və infra xəritəsinin canlı və avtomatik qurulması.
+
+6.3. Smart Onboarding / Offboarding
+
+HR-IT keçidinin avtomatlaşdırılması.
+
+6.4. Change Impact Analysis
+
+Dəyişiklikdən əvvəl təsir radiusunun hesablanması.
+
+6.5. Natural Language Control
+
+Təbii dildə infrastruktur sorğusu və əmrlər.
+
+6.6. Self-Healing
+
+Standart problemlərin avtomatik diaqnozu və düzəldilməsi.
+
+6.7. Executive AI Briefing
+
+Rəhbərlik üçün avtomatik gündəlik xülasə.
+
+6.8. Ticket Learning Loop
+
+Həll edilən problemlərin AI knowledge-ə çevrilməsi.
+
+6.9. QR Asset History
+
+QR ilə ani aktiv tarixçəsi.
+
+6.10. Cost Optimization AI
+
+Təmir/dəyişdirmə və xərclərə dair ağıllı tövsiyələr.
+
+6.11. Risk Score Per Asset/User
+
+Hər cihaz və istifadəçi üçün dinamik risk balı.
+
+6.12. Business Service Map
+
+Tək cihaz yox, biznes xidmətlərinin dependency xəritəsi.
+
+7. Təhlükəsizlik modeli
+7.1. Əsas prinsip
+
+Security modul əlavə edilən funksiya deyil, bütün platformanın alt qatıdır.
+
+7.2. Qorunmalı istiqamətlər
+authentication və MFA
+least privilege access
+support access governance
+tenant data isolation
+signed activation model
+action approvals
+AI safety controls
+audit immutability
+secrets/config protection
+7.3. Email və ransomware müdafiəsi
+
+Bazara çıxış iddiası belə formalaşdırılmalıdır:
+
+“Platforma email-dən başlayan zərərli fayl, phishing və ransomware zəncirini aşkarlayır, riskli faylları bloklayır, yoluxmuş endpoint-i izolə edir, yayılmanı məhdudlaşdırır və bərpanı sürətləndirir.”
+
+8. Multi-tenant və admin separation modeli
+8.1. Vendor Admin
+
+Vendor yalnız aşağıdakılara çıxış görməlidir:
+
+tenant status
+license/entitlement
+package activation
+quota/consumption summary
+deployment health metadata
+activation history
+
+Vendor müştərinin operational data-sına çıxmamalıdır.
+
+8.2. Company Admin
+
+Company Admin yalnız öz tenantı və öz instansiyası üzrə idarəetmə aparmalıdır.
+
+8.3. Support access
+
+Vendor support access:
+
+explicit approval ilə
+time-bound
+fully audited
+optional
+olmalıdır.
+9. Licensing, module activation və product control
+9.1. Əsas prinsip
+
+Modul aktivasiya source code səviyyəsində yox, signed entitlement səviyyəsində idarə olunacaq.
+
+9.2. Model
+Vendor License & Entitlement Server
+Local License Agent
+Signed entitlement packages
+online sync activation
+offline package activation
+runtime enforcement
+9.3. Packaging qaydası
+
+Hybrid packaging model:
+
+standart modullar → built-in but locked
+ağır/premium modullar → separately packaged and signed
+9.4. Müştərinin özündən modul əlavə etməsi
+
+Core system daxilinə source-level modul injection qəbul olunmur.
+
+İcazə verilən genişlənmə:
+
+APIs
+connectors
+workflows
+custom fields
+reports
+sanctioned extension points
+9.5. Yeni modul sonradan necə əlavə olunur
+standart modul → yeni platforma release-i ilə gəlir, locked olur, entitlement ilə açılır
+ağır modul → ayrıca signed package + entitlement ilə gəlir
+9.6. Activation rejimləri
+Connected On-Prem
+Air-Gapped / Offline On-Prem
+9.7. Installation identity
+
+Tək Hardware ID deyil, environment-bound installation identity istifadə olunmalıdır.
+
+10. Pricing modeli
+10.1. Əsas prinsip
+
+Eyni modulu alan iki şirkət eyni qiyməti ödəməməlidir, əgər resurs və əməliyyat yükü fərqlidirsə.
+
+10.2. Pricing formulu
+
+Qiymət = Base Platform Fee + Activated Module Fee + Managed Resource Units + Site/Instance Factor + Optional Premium AI/SOC/Advanced Modules
+
+10.3. Billable resource kateqoriyaları
+endpoint count
+server count
+network device count
+user/admin count
+AI request quota
+automation runs
+integration connector count
+storage/backup scope
+site / instance sayı
+10.4. Auto-discovery pricing
+
+Platforma ilkin discovery ilə quote suggestion verə bilər.
+Amma final qiyməti vendor admin təsdiqləməlidir.
+
+10.5. Growth-friendly pricing
+
+Hard tier model yox, smooth growth band modeli istifadə olunmalıdır ki, müştəri 50-dən 51-ə keçəndə şok sıçrayış olmasın.
+
+11. Backup və recovery yanaşması
+11.1. Platform self-backup
+
+Platformanın öz data və config-ləri ayrıca backup olunmalıdır.
+
+11.2. Customer data backup capability
+
+Platforma şirkətin:
+
+VM-ləri
+serverləri
+file share-ləri
+database-ləri
+network config-ləri
+NVR/camera arxivlərini
+
+backup etmək üçün control/orchestration plane rolunu oynayacaq.
+
+11.3. Əsas prinsip
+
+Platforma bütün backup data-nın öz storage engine-i olmayacaq.
+Platforma:
+
+policy
+scheduling
+orchestration
+restore
+audit
+health monitoring
+idarə edəcək.
+11.4. Backup model
+critical DB → near-real-time / point-in-time recovery
+files/attachments → scheduled snapshots/versioning
+logs/telemetry → retention archive
+configs/policies → versioned config backup
+full recovery → environment snapshot + DR procedure
+11.5. Restore
+
+Backup capability restore-first düşünülməlidir:
+
+point-in-time restore
+single item restore
+config-only restore
+full recovery flows
+restore validation
+12. AI modeli
+12.1. AI Core ayrıdır
+
+AI runtime, model registry, routing, policy, safety, memory isolation ayrıca capability-dir.
+
+12.2. AI Product Features ayrıdır
+
+AI copilot, summary, ticket triage, executive briefing, cost optimization və s. ayrıca capability-dir.
+
+12.3. AI əmrləri
+
+Natural language control yalnız:
+
+audited
+permission-aware
+approval-aware
+safe/approval/auto modes
+ilə işləməlidir.
+12.4. AI riskləri
+hallucination
+yanlış action
+over-automation
+tenant memory bleed
+ungoverned tool calling
+
+Bu risklər governance ilə bağlanmalıdır.
+
+13. Genişlənmə və modul əlavə etmə prinsipi
+13.1. Məqsəd
+
+Platforma gələcək modullar üçün hazır olmalıdır, amma skelet dağılmamalıdır.
+
+13.2. Bunun üçün şərtlər
+capability boundaries təmiz qalmalıdır
+module registry olmalıdır
+dependency matrix olmalıdır
+version compatibility matrisi olmalıdır
+shared services (auth, audit, notification, localization, licensing) ayrı saxlanmalıdır
+extension points əvvəlcədən müəyyən olunmalıdır
+13.3. Əsas prinsip
+
+Yeni modul əlavə olunanda:
+
+core skelet dəyişməməlidir
+modul ayrıca capability kimi qeyd olunmalıdır
+licensing və packaging qaydalarına uyğun gəlməlidir
+14. Phase model
+14.1. Phase 1 — Foundation Product
+
+Phase 1 üçün minimal, amma gələcəyi daşıyan skelet:
+
+Platform Core
+Platform Admin
+Company Management
+Dynamic Structure
+Workforce Lifecycle
+Location
+Asset Lifecycle
+Infrastructure & Endpoint
+Network
+Ticketing
+Monitoring/Event
+Integration foundation
+Notification foundation
+Localization foundation
+Deployment/Productization
+Licensing/Activation
+Data/Audit/Compliance
+Reporting foundation
+Backup Orchestration foundation
+AI Core foundation
+AI Product foundation
+Automation foundation
+14.2. Phase 2 — Strategic Differentiators
+Predictive Failure
+Auto-Documentation
+Self-Healing
+Change Impact Analysis
+Executive AI Briefing
+Cost Optimization
+Advanced Backup Control
+Email Security module
+14.3. Phase 3 — Advanced Enterprise
+Security/SOC advanced
+Business Service Map
+Risk Score Engine
+Advanced AI Copilot
+Advanced DR/BCP
+Premium analytics
+deeper recovery automation
+15. Executive Domain View
+
+Rəhbərlik və satış üçün yığcam görünüş:
+
+Platform Core & Governance
+Company, Structure & Workforce
+Asset, Location & Procurement
+Service Management
+Infrastructure & Network Operations
+Monitoring, Observability & Security
+AI Platform & AI Copilot
+Automation & Self-Healing
+Backup, Recovery & Business Continuity
+Integrations, Migration & Access Channels
+Notification, Communication & Localization
+Data, Audit, Analytics & Productization
+16. Əsas texnoloji və memarlıq qərar istiqaməti
+
+Bu sənəd texnologiyanı tam bağlamır, amma aşağıdakı prinsipləri bağlayır:
+
+modular monolith first, service-ready boundaries
+PostgreSQL core data foundation
+local agents + connector model
+event-driven expansion where needed
+signed artifact and signed entitlement architecture
+API-first internal capability exposure
+audit-first state transitions
+17. Qəbul olunmayan dizayn səhvləri
+
+Aşağıdakılar qadağan olunmuş dizayn yanaşması sayılır:
+
+tenant isolation-u sadəcə tenant_id səviyyəsində düşünmək
+Platform Admin ilə Company Admin-i qarışdırmaq
+AI Core ilə AI Product-i qarışdırmaq
+licensing-i sadəcə text key kimi qurmaq
+obfuscation-u əsas security mexanizmi saymaq
+UI hiding ilə module enforcement-i bitmiş saymaq
+backup-u restore olmadan düşünmək
+plugin injection ilə customer source extension-ə icazə vermək
+localization-i sonrakı mərhələyə atmaq
+DR/BCP-ni yalnız backup kimi görmək
+pricing-i yalnız user sayına bağlamaq
+bütün modulları eyni packaging qaydası ilə vermək
+security-də “100% prevention” iddiası vermək
+18. Əsas risklər və boşluqlar
+18.1. Scope overload
+
+Çox capability-ni eyni anda yazmağa çalışmaq layihəni dondura bilər.
+
+18.2. Phase və capability xəritəsini qarışdırmaq
+
+Capability map memarlıq üçündür, icra siyahısı deyil.
+
+18.3. Licensing və activation zəifliyi
+
+Commercial control itirilərsə məhsul modeli dağılır.
+
+18.4. AI overreach
+
+AI imkanları controlsuz açılarsa təhlükəsizlik və etibar zərər görər.
+
+18.5. Backup storage trap
+
+Platformanın özü nəhəng native backup storage məhsuluna çevrilərsə əsas məhsul fokusdan çıxar.
+
+18.6. Email security-də scope partlayışı
+
+İlk mərhələdə tam mail provider qurmağa çalışmaq strateji gecikmə yaradar.
+
+18.7. Pricing injustice
+
+Resource, site və complexity nəzərə alınmasa qiymət modeli ya satışı öldürər, ya da mənfəəti.
+
+19. Tövsiyə olunan qərar
+
+Bu sənəd üzrə mənim qəti professional qərarım belədir:
+
+19.1. Məhsul modeli
+
+GLTive vendor-controlled, modular, on-prem deployable, AI-driven enterprise IT operations platform kimi qurulmalıdır.
+
+19.2. Arxitektura modeli
+
+Source-of-truth capability architecture saxlanmalı, executive domain view ayrıca istifadə olunmalıdır.
+
+19.3. Licensing modeli
+
+Signed entitlement + Local License Agent + online/offline activation + hybrid packaging.
+
+19.4. Backup modeli
+
+Native full backup product yox, orchestration and recovery control platform.
+
+19.5. Security modeli
+
+Email-to-endpoint-to-network-to-SOC-to-recovery chain.
+
+19.6. AI modeli
+
+AI Core ayrı, AI Product ayrı, action-lar audited və approval-aware.
+
+19.7. Pricing modeli
+
+Base + modules + managed resources + site factor + premium capability.
+
+19.8. Genişlənmə modeli
+
+Closed core + controlled extensibility.
+
+19.9. Phase başlanğıcı
+
+Əvvəl skelet, sonra differenciator capabilities.

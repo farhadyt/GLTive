@@ -1,0 +1,1243 @@
+GLTive Platform
+Module 01 — Stock / Inventory Foundation
+API Contract & Service Rules v1.0
+1. Sənədin məqsədi
+
+Bu sənəd aşağıdakıları müəyyən edir:
+
+Module 01 üçün backend API sərhədləri
+endpoint qrupları
+request/response qaydaları
+service use case-ləri
+validation qaydaları
+permission enforcement
+audit trigger nöqtələri
+error response standartı
+gələcək modullara açıq qalacaq API prinsipləri
+
+Bu sənədin rolu:
+Antigravity üçün backend davranış müqaviləsi olmaqdır.
+
+2. API dizayn prinsipləri
+2.1. Company-scoped API
+
+Bütün endpoint-lər company context ilə işləməlidir.
+
+2.2. RESTful, amma use-case aware
+
+Sadə CRUD olan yerlərdə REST prinsipi qorunsun, amma stok hərəkətləri kimi use-case-lər ayrıca command endpoint-lərlə verilsin.
+
+2.3. Immutable history
+
+Movement endpoint-ləri create-only davranışla qurulmalıdır. Update/delete endpoint verilməməlidir.
+
+2.4. Serialized və quantity-based logic ayrıdır
+
+Request-lərdə bu iki məntiq qarışdırılmamalıdır.
+
+2.5. Backend enforcement məcburidir
+
+Permission və validation yalnız frontend-də yox, backend-də də tam enforce olunmalıdır.
+
+2.6. Audit by default
+
+Bütün kritik write əməliyyatları audit trigger etməlidir.
+
+2.7. Localization-ready error structure
+
+Error code-lar sabit olsun, UI lokalizasiya etsin.
+
+3. API base structure
+Base prefix
+
+/api/v1/stock/
+
+Response format — success
+{
+  "success": true,
+  "message": "optional_message_key",
+  "data": {},
+  "meta": {}
+}
+Response format — error
+{
+  "success": false,
+  "error": {
+    "code": "stock_item_not_found",
+    "message": "localized_on_frontend_or_backend_key",
+    "details": {},
+    "field_errors": {}
+  }
+}
+Pagination format
+{
+  "success": true,
+  "data": {
+    "items": [],
+    "pagination": {
+      "page": 1,
+      "page_size": 20,
+      "total_items": 140,
+      "total_pages": 7
+    }
+  }
+}
+4. Endpoint qrupları
+
+Module 01 üçün endpoint qrupları:
+
+Categories API
+Brands API
+Vendors API
+Item Models API
+Warehouses API
+Stock Items API
+Stock Receive API
+Stock Issue API
+Stock Transfer API
+Stock Adjustment API
+Stock Movement History API
+Stock Alerts API
+Stock Dashboard API
+Lookup/Reference API
+5. Categories API
+5.1. List categories
+Endpoint
+
+GET /api/v1/stock/categories/
+
+Query params
+search
+is_active
+parent_category_id
+page
+page_size
+Permission
+stock.view
+Response data
+id
+code
+name
+description
+parent_category_id
+is_active
+created_at
+updated_at
+Service rule
+yalnız current company-yə aid category-lər qaytarılır
+soft deleted record-lar qaytarılmır
+5.2. Create category
+Endpoint
+
+POST /api/v1/stock/categories/
+
+Permission
+stock.master.manage
+Request body
+{
+  "code": "LAPTOP",
+  "name": "Laptop",
+  "description": "Portable computers",
+  "parent_category_id": null,
+  "sort_order": 0
+}
+Validation
+code required
+name required
+code company daxilində unique
+parent_category_id varsa eyni company-dən olmalıdır
+cyclic relation qadağandır
+Audit
+stock.category.created
+5.3. Update category
+Endpoint
+
+PUT /api/v1/stock/categories/{id}/
+
+Permission
+stock.master.manage
+Validation
+eyni create validations
+mövcud olmayan və ya başqa company-yə aid record update edilə bilməz
+Audit
+stock.category.updated
+5.4. Deactivate category
+Endpoint
+
+POST /api/v1/stock/categories/{id}/deactivate/
+
+Permission
+stock.master.manage
+Validation
+active child category və ya active model relation-ları varsa business rule tətbiq et:
+ya block et
+ya warning strategy qaytar
+Audit
+stock.category.deactivated
+6. Brands API
+6.1. List brands
+
+GET /api/v1/stock/brands/
+
+Permission
+stock.view
+Query params
+search
+is_active
+page
+page_size
+6.2. Create brand
+
+POST /api/v1/stock/brands/
+
+Permission
+stock.master.manage
+Request
+{
+  "name": "Dell",
+  "description": "Brand description",
+  "website": "https://example.com"
+}
+Validation
+name required
+normalized name company daxilində unique
+Audit
+stock.brand.created
+6.3. Update brand
+
+PUT /api/v1/stock/brands/{id}/
+
+Permission
+stock.master.manage
+Audit
+stock.brand.updated
+6.4. Deactivate brand
+
+POST /api/v1/stock/brands/{id}/deactivate/
+
+Permission
+stock.master.manage
+Audit
+stock.brand.deactivated
+7. Vendors API
+7.1. List vendors
+
+GET /api/v1/stock/vendors/
+
+Permission
+stock.view
+7.2. Create vendor
+
+POST /api/v1/stock/vendors/
+
+Permission
+stock.master.manage
+Request
+{
+  "name": "ABC Supplies",
+  "code": "ABC01",
+  "contact_person": "John Doe",
+  "email": "john@example.com",
+  "phone": "+123456",
+  "address": "Address",
+  "notes": "optional"
+}
+Validation
+name required
+email format valid if present
+code unique if present
+Audit
+stock.vendor.created
+7.3. Update vendor
+
+PUT /api/v1/stock/vendors/{id}/
+
+Permission
+stock.master.manage
+Audit
+stock.vendor.updated
+7.4. Deactivate vendor
+
+POST /api/v1/stock/vendors/{id}/deactivate/
+
+Permission
+stock.master.manage
+Audit
+stock.vendor.deactivated
+8. Item Models API
+8.1. List item models
+
+GET /api/v1/stock/item-models/
+
+Permission
+stock.view
+Query params
+search
+category_id
+brand_id
+tracking_type
+is_active
+page
+page_size
+8.2. Create item model
+
+POST /api/v1/stock/item-models/
+
+Permission
+stock.master.manage
+Request
+{
+  "category_id": "uuid",
+  "brand_id": "uuid",
+  "vendor_reference_id": "uuid",
+  "model_name": "Latitude 7440",
+  "model_code": "LAT7440",
+  "description": "optional",
+  "default_unit": "pcs",
+  "tracking_type": "serialized",
+  "minimum_stock_level": 3
+}
+Validation
+category_id required
+model_name required
+tracking_type required
+tracking_type must be quantity_based or serialized
+category, brand, vendor same company olmalıdır
+minimum_stock_level >= 0
+Audit
+stock.item_model.created
+8.3. Update item model
+
+PUT /api/v1/stock/item-models/{id}/
+
+Permission
+stock.master.manage
+Important rule
+əgər artıq linked stock item varsa, tracking_type dəyişmək qadağan oluna bilər
+Audit
+stock.item_model.updated
+8.4. Deactivate item model
+
+POST /api/v1/stock/item-models/{id}/deactivate/
+
+Permission
+stock.master.manage
+Validation
+active stock item relation varsa deactivate policy business rule ilə işləməlidir
+Audit
+stock.item_model.deactivated
+9. Warehouses API
+9.1. List warehouses
+
+GET /api/v1/stock/warehouses/
+
+Permission
+stock.view
+Query params
+search
+is_active
+is_default
+page
+page_size
+9.2. Create warehouse
+
+POST /api/v1/stock/warehouses/
+
+Permission
+stock.master.manage
+Request
+{
+  "code": "MAIN",
+  "name": "Main Warehouse",
+  "location_reference_id": null,
+  "description": "optional",
+  "is_default": true
+}
+Validation
+code required and unique
+name required
+location_reference_id future-ready, if used must belong to company
+əgər is_default = true isə company üçün başqa default warehouse deactivate edilməli və ya request rədd olunmalıdır
+Audit
+stock.warehouse.created
+9.3. Update warehouse
+
+PUT /api/v1/stock/warehouses/{id}/
+
+Permission
+stock.master.manage
+Audit
+stock.warehouse.updated
+9.4. Deactivate warehouse
+
+POST /api/v1/stock/warehouses/{id}/deactivate/
+
+Permission
+stock.master.manage
+Validation
+warehouse-da active stock varsa deactivate block və ya business-controlled warning
+default warehouse deactivate olunursa replacement tələb oluna bilər
+Audit
+stock.warehouse.deactivated
+10. Stock Items API
+10.1. List stock items
+
+GET /api/v1/stock/items/
+
+Permission
+stock.view
+Query params
+search
+warehouse_id
+item_model_id
+category_id
+tracking_type
+low_stock_only
+is_active
+page
+page_size
+Response fields
+id
+item_model_id
+warehouse_id
+internal_code
+item_name_override
+tracking_type
+quantity_on_hand
+quantity_reserved
+quantity_available
+minimum_stock_level_effective
+low_stock_flag
+is_active
+created_at
+updated_at
+10.2. Stock item detail
+
+GET /api/v1/stock/items/{id}/
+
+Permission
+stock.view
+Response əlavələri
+item model summary
+warehouse summary
+recent movements
+alert summary
+serialized units summary if applicable
+10.3. Create stock item
+
+POST /api/v1/stock/items/
+
+Permission
+stock.manage
+Request
+{
+  "item_model_id": "uuid",
+  "warehouse_id": "uuid",
+  "internal_code": "STK-0001",
+  "item_name_override": null,
+  "minimum_stock_level_override": 5,
+  "notes": "optional"
+}
+Validation
+model və warehouse eyni company-dən olmalıdır
+tracking_type request-dən gəlməməlidir, model-dən götürülməlidir və ya uyğunluğu yoxlanmalıdır
+eyni warehouse + item model üçün duplicate active stock item yaratma siyasəti aydın olmalıdır:
+default olaraq block
+Audit
+stock.item.created
+10.4. Update stock item
+
+PUT /api/v1/stock/items/{id}/
+
+Permission
+stock.manage
+Allowed changes
+internal_code
+item_name_override
+minimum_stock_level_override
+notes
+is_active
+Not allowed
+item_model dəyişmək
+warehouse dəyişmək
+tracking_type dəyişmək
+Audit
+stock.item.updated
+10.5. Deactivate stock item
+
+POST /api/v1/stock/items/{id}/deactivate/
+
+Permission
+stock.manage
+Validation
+on_hand > 0 olduqda deactivate block və ya xüsusi reason tələb oluna bilər
+open alert varsa warning qaytarıla bilər
+Audit
+stock.item.deactivated
+11. Stock Receive API
+
+Bu group incoming stock hərəkətləri üçündür.
+
+11.1. Receive quantity-based stock
+
+POST /api/v1/stock/receive/quantity/
+
+Permission
+stock.receive
+Request
+{
+  "stock_item_id": "uuid",
+  "quantity": 25,
+  "unit_cost": 10.50,
+  "reference_type": "manual_receive",
+  "reference_id": null,
+  "reason_code": "new_delivery",
+  "note": "optional"
+}
+Validation
+stock item same company
+stock item active
+tracking type must be quantity_based
+quantity > 0
+warehouse active
+unit_cost >= 0 if present
+Service rules
+create stock_movement with movement_type=stock_in
+increase quantity_on_hand
+recalculate quantity_available
+evaluate alert rules
+Audit
+stock.receive.quantity
+11.2. Receive serialized stock
+
+POST /api/v1/stock/receive/serialized/
+
+Permission
+stock.receive
+Request
+{
+  "stock_item_id": "uuid",
+  "units": [
+    {
+      "serial_number": "ABC123",
+      "asset_tag_candidate": "TAG001",
+      "condition_status": "new",
+      "note": "optional"
+    },
+    {
+      "serial_number": "ABC124",
+      "asset_tag_candidate": "TAG002",
+      "condition_status": "new",
+      "note": "optional"
+    }
+  ],
+  "unit_cost": 1200,
+  "reference_type": "manual_receive",
+  "reference_id": null,
+  "reason_code": "new_delivery",
+  "note": "optional"
+}
+Validation
+stock item active
+tracking type must be serialized
+units array required and non-empty
+every serial unique in company
+warehouse active
+Service rules
+create serial units
+create one movement per unit or one batch movement strategy
+update quantity_on_hand
+recalculate quantity_available
+evaluate alerts
+Recommended approach
+movement history-də hər serial vahid üçün relation qorunsun
+Audit
+stock.receive.serialized
+12. Stock Issue API
+12.1. Issue quantity-based stock
+
+POST /api/v1/stock/issue/quantity/
+
+Permission
+stock.issue
+Request
+{
+  "stock_item_id": "uuid",
+  "quantity": 5,
+  "reference_type": "manual_issue",
+  "reference_id": null,
+  "reason_code": "internal_usage",
+  "note": "optional"
+}
+Validation
+stock item active
+tracking type = quantity_based
+quantity > 0
+available quantity enough olmalıdır
+warehouse active
+Service rules
+create stock_out movement
+reduce quantity_on_hand
+recalculate quantity_available
+evaluate low stock alerts
+Audit
+stock.issue.quantity
+12.2. Issue serialized stock
+
+POST /api/v1/stock/issue/serialized/
+
+Permission
+stock.issue
+Request
+{
+  "stock_item_id": "uuid",
+  "serial_unit_ids": ["uuid1", "uuid2"],
+  "reference_type": "manual_issue",
+  "reference_id": null,
+  "reason_code": "internal_usage",
+  "note": "optional"
+}
+Validation
+stock item tracking type = serialized
+serial units belong to same stock item and company
+serial units status must be in_stock
+warehouse active
+Service rules
+selected serial units issued status ala bilər və ya issue-specific future status model ilə idarə olunar
+movement written
+quantity_on_hand updated
+alerts re-evaluated
+Audit
+stock.issue.serialized
+13. Stock Transfer API
+13.1. Transfer quantity-based stock
+
+POST /api/v1/stock/transfer/quantity/
+
+Permission
+stock.transfer
+Request
+{
+  "source_stock_item_id": "uuid",
+  "target_warehouse_id": "uuid",
+  "quantity": 10,
+  "reason_code": "warehouse_rebalance",
+  "note": "optional"
+}
+Validation
+source stock item active
+target warehouse active
+source and target warehouse fərqli olmalıdır
+quantity available enough olmalıdır
+tracking type must be quantity_based
+Service rules
+source warehouse üçün transfer_out
+target warehouse üçün:
+existing stock item varsa ona əlavə et
+yoxdursa uyğun stock item yarat
+corresponding transfer_in
+transaction atomic olmalıdır
+Audit
+stock.transfer.quantity
+13.2. Transfer serialized stock
+
+POST /api/v1/stock/transfer/serialized/
+
+Permission
+stock.transfer
+Request
+{
+  "source_stock_item_id": "uuid",
+  "target_warehouse_id": "uuid",
+  "serial_unit_ids": ["uuid1", "uuid2"],
+  "reason_code": "warehouse_rebalance",
+  "note": "optional"
+}
+Validation
+source stock item serialized olmalıdır
+all serials in_stock olmalıdır
+target warehouse different olmalıdır
+Service rules
+target warehouse-də uyğun stock item find/create
+serial units warehouse relation update
+paired transfer movement records write
+quantities sync olunmalıdır
+Audit
+stock.transfer.serialized
+14. Stock Adjustment API
+14.1. Create adjustment session
+
+POST /api/v1/stock/adjustments/sessions/
+
+Permission
+stock.adjust
+Request
+{
+  "warehouse_id": "uuid",
+  "reason": "Monthly count"
+}
+Service rules
+auto session_code generate oluna bilər
+Audit
+stock.adjustment.session_created
+14.2. Add/update adjustment lines
+
+PUT /api/v1/stock/adjustments/sessions/{id}/lines/
+
+Permission
+stock.adjust
+Request
+{
+  "lines": [
+    {
+      "stock_item_id": "uuid",
+      "counted_quantity": 17,
+      "note": "optional"
+    }
+  ]
+}
+Validation
+session status draft olmalıdır
+stock item həmin warehouse-a aid olmalıdır
+Service rules
+expected_quantity current stock-dan götürülür
+difference auto-calculate
+Audit
+stock.adjustment.lines_updated
+14.3. Confirm adjustment session
+
+POST /api/v1/stock/adjustments/sessions/{id}/confirm/
+
+Permission
+stock.adjust
+Validation
+session draft olmalıdır
+line-lər olmalıdır
+each line business validation-dan keçməlidir
+Service rules
+positive difference → adjustment_plus movements
+negative difference → adjustment_minus movements
+stock balances update
+session status confirmed
+post-adjustment alerts evaluate
+transaction atomic olmalıdır
+Audit
+stock.adjustment.confirmed
+14.4. Cancel adjustment session
+
+POST /api/v1/stock/adjustments/sessions/{id}/cancel/
+
+Permission
+stock.adjust
+Validation
+only draft sessions
+Audit
+stock.adjustment.cancelled
+15. Stock Movement History API
+15.1. List movements
+
+GET /api/v1/stock/movements/
+
+Permission
+stock.history.view
+Query params
+stock_item_id
+warehouse_id
+movement_type
+performed_by_user_id
+date_from
+date_to
+reference_type
+page
+page_size
+Rules
+read-only
+no update/delete endpoint
+15.2. Movement detail
+
+GET /api/v1/stock/movements/{id}/
+
+Permission
+stock.history.view
+Response
+movement core data
+source/target summaries
+item summary
+serial summary if relevant
+actor summary
+16. Stock Alerts API
+16.1. List alerts
+
+GET /api/v1/stock/alerts/
+
+Permission
+stock.view
+Query params
+status
+alert_type
+warehouse_id
+stock_item_id
+page
+page_size
+16.2. Acknowledge alert
+
+POST /api/v1/stock/alerts/{id}/acknowledge/
+
+Permission
+stock.alert.manage
+Validation
+only open alerts
+Audit
+stock.alert.acknowledged
+16.3. Resolve alert
+
+POST /api/v1/stock/alerts/{id}/resolve/
+
+Permission
+stock.alert.manage
+Validation
+open or acknowledged alerts only
+Service rule
+manual resolution allowed
+future auto-resolution support üçün açıq qalmalıdır
+Audit
+stock.alert.resolved
+17. Stock Dashboard API
+17.1. Dashboard summary
+
+GET /api/v1/stock/dashboard/summary/
+
+Permission
+stock.view
+Response sections
+total_active_stock_items
+total_warehouses
+low_stock_count
+recent_movements_count
+serialized_count
+quantity_based_count
+17.2. Recent movements widget
+
+GET /api/v1/stock/dashboard/recent-movements/
+
+Permission
+stock.view
+17.3. Low stock widget
+
+GET /api/v1/stock/dashboard/low-stock/
+
+Permission
+stock.view
+18. Lookup / Reference API
+
+Bu group UI dropdown-lar üçün yüngül endpoint-lərdir.
+
+18.1. Category lookup
+
+GET /api/v1/stock/lookups/categories/
+
+18.2. Brand lookup
+
+GET /api/v1/stock/lookups/brands/
+
+18.3. Vendor lookup
+
+GET /api/v1/stock/lookups/vendors/
+
+18.4. Warehouse lookup
+
+GET /api/v1/stock/lookups/warehouses/
+
+18.5. Item model lookup
+
+GET /api/v1/stock/lookups/item-models/
+
+18.6. Stock item lookup
+
+GET /api/v1/stock/lookups/items/
+
+Permission
+stock.view
+Rule
+lightweight payload only
+19. Service layer use case-ləri
+
+Bu modul üçün əsas service-lər aşağıdakılar olmalıdır.
+
+19.1. CategoryService
+create_category
+update_category
+deactivate_category
+list_categories
+validate_parent_category
+19.2. BrandService
+create_brand
+update_brand
+deactivate_brand
+list_brands
+19.3. VendorReferenceService
+create_vendor
+update_vendor
+deactivate_vendor
+list_vendors
+19.4. ItemModelService
+create_item_model
+update_item_model
+deactivate_item_model
+list_item_models
+19.5. WarehouseService
+create_warehouse
+update_warehouse
+deactivate_warehouse
+set_default_warehouse
+list_warehouses
+19.6. StockItemService
+create_stock_item
+update_stock_item
+deactivate_stock_item
+get_stock_item
+list_stock_items
+recalculate_available_quantity
+19.7. StockReceiveService
+receive_quantity_stock
+receive_serialized_stock
+19.8. StockIssueService
+issue_quantity_stock
+issue_serialized_stock
+19.9. StockTransferService
+transfer_quantity_stock
+transfer_serialized_stock
+19.10. StockAdjustmentService
+create_adjustment_session
+upsert_adjustment_lines
+confirm_adjustment_session
+cancel_adjustment_session
+19.11. StockMovementQueryService
+list_movements
+get_movement_detail
+19.12. StockAlertService
+evaluate_alerts_for_stock_item
+list_alerts
+acknowledge_alert
+resolve_alert
+19.13. StockDashboardService
+get_summary
+get_recent_movements
+get_low_stock_items
+20. Service davranış qaydaları
+20.1. Transaction handling
+
+Aşağıdakı use case-lər transaction içində işləməlidir:
+
+receive
+issue
+transfer
+adjustment confirm
+20.2. Quantity sync
+
+Movement yaratmaqla stock quantity update eyni transaction daxilində olmalıdır.
+
+20.3. Company consistency
+
+Service layer hər FK və target entity üçün company consistency yoxlamalıdır.
+
+20.4. Immutable movement
+
+Movement service createdən sonra update/delete etməməlidir.
+
+20.5. Alert evaluation
+
+Stock dəyişikliklərindən sonra minimum stock alert yoxlaması işləməlidir.
+
+20.6. Audit emission
+
+Kritik use case bitdikdən sonra audit event yazılmalıdır.
+
+21. Validation flow
+
+Validation 4 səviyyədə aparılmalıdır.
+
+21.1. Request schema validation
+required fields
+type checks
+enum checks
+format checks
+21.2. Business validation
+same company checks
+active status checks
+quantity availability
+warehouse compatibility
+tracking type rules
+21.3. State validation
+adjustment session status
+serial stock status
+deactivation safety rules
+21.4. Transaction validation
+concurrent stock conflicts
+race condition prevention
+atomic stock updates
+22. Permission qaydaları
+
+Backend permission mapping aşağıdakı kimi olmalıdır.
+
+Permission	Mənası
+stock.view	stock məlumatına baxış
+stock.manage	stock item idarəsi
+stock.master.manage	category/brand/vendor/model/warehouse idarəsi
+stock.receive	anbara qəbul əməliyyatı
+stock.issue	anbardan çıxış əməliyyatı
+stock.transfer	anbarlararası köçürmə
+stock.adjust	inventar düzəlişi
+stock.alert.manage	stock alert idarəsi
+stock.history.view	movement history baxışı
+Rule
+
+Frontend button gizlətməsi kifayət deyil. Bütün endpoint-lər backend permission guard ilə qorunmalıdır.
+
+23. Error contract
+23.1. Error response strukturu
+{
+  "success": false,
+  "error": {
+    "code": "insufficient_stock",
+    "message": "stock.error.insufficient_stock",
+    "details": {
+      "available_quantity": 3,
+      "requested_quantity": 5
+    },
+    "field_errors": {
+      "quantity": ["stock.validation.quantity_exceeds_available"]
+    }
+  }
+}
+23.2. Error code qrupları
+Common
+validation_error
+forbidden
+not_found
+conflict
+inactive_entity
+cross_company_reference
+invalid_state
+Category/Brand/Vendor/Model/Warehouse
+category_not_found
+brand_not_found
+vendor_not_found
+item_model_not_found
+warehouse_not_found
+duplicate_code
+duplicate_name
+duplicate_model_code
+Stock item
+stock_item_not_found
+duplicate_stock_item
+tracking_type_mismatch
+stock_item_has_balance
+negative_stock_not_allowed
+Receive/Issue/Transfer
+insufficient_stock
+serialized_unit_not_found
+serialized_unit_not_available
+invalid_transfer_target
+transfer_same_warehouse_forbidden
+Adjustment
+adjustment_session_not_found
+adjustment_session_not_editable
+adjustment_session_already_confirmed
+adjustment_line_invalid
+Alerts
+alert_not_found
+alert_not_open
+alert_not_resolvable
+24. HTTP status qaydaları
+200
+successful read/update action
+command success where no new resource URI needed
+201
+successful create
+400
+malformed request / basic validation error
+403
+permission denied
+404
+entity not found in current company scope
+409
+business conflict
+duplicate
+insufficient stock
+invalid state transition
+422
+optional for semantic validation failures if team chooses this standard
+if not used, 400/409 ilə consistent qalınsın
+25. Audit trigger points
+
+Aşağıdakı endpoint-lər audit yazmalıdır:
+
+POST categories
+PUT categories/{id}
+POST categories/{id}/deactivate
+POST brands
+PUT brands/{id}
+POST brands/{id}/deactivate
+POST vendors
+PUT vendors/{id}
+POST vendors/{id}/deactivate
+POST item-models
+PUT item-models/{id}
+POST item-models/{id}/deactivate
+POST warehouses
+PUT warehouses/{id}
+POST warehouses/{id}/deactivate
+POST items
+PUT items/{id}
+POST items/{id}/deactivate
+POST receive/quantity
+POST receive/serialized
+POST issue/quantity
+POST issue/serialized
+POST transfer/quantity
+POST transfer/serialized
+POST adjustments/sessions
+PUT adjustments/sessions/{id}/lines
+POST adjustments/sessions/{id}/confirm
+POST adjustments/sessions/{id}/cancel
+POST alerts/{id}/acknowledge
+POST alerts/{id}/resolve
+Audit payload minimum
+actor_user_id
+company_id
+action_code
+target_entity_type
+target_entity_id
+request_summary
+result_summary
+timestamp
+26. Concurrency və data integrity qaydaları
+
+Bu modulda concurrency kritikdir.
+
+26.1. Stock updates
+
+Receive/issue/transfer/adjustment confirm əməliyyatlarında:
+
+DB transaction
+row-level locking və ya equivalent safe update strategy
+tətbiq olunmalıdır.
+26.2. Serialized units
+
+Eyni serial vahid iki paralel request ilə issue edilə bilməməlidir.
+
+26.3. Adjustment confirm
+
+Eyni session iki dəfə confirm edilə bilməməlidir.
+
+26.4. Idempotency future-ready
+
+Movement yaradan command-lər üçün gələcəkdə idempotency key dəstəyi əlavə edilə biləcək şəkildə service layer qurulmalıdır.
+
+27. API response design qaydaları
+27.1. List endpoint-lər
+pagination support
+filters
+consistent sort
+default sorting documented
+27.2. Detail endpoint-lər
+summary + relation snapshot
+lazımsız ağır nested payload qadağandır
+27.3. Command endpoint-lər
+result summary qaytarmalıdır
+affected entity IDs qaytarmalıdır
+Example command success
+{
+  "success": true,
+  "message": "stock.receive.success",
+  "data": {
+    "stock_item_id": "uuid",
+    "movement_id": "uuid",
+    "new_quantity_on_hand": 45,
+    "new_quantity_available": 45
+  }
+}
+28. Future extension hooks
+
+Bu API gələcəkdə aşağıdakılara açıq qalmalıdır:
+
+28.1. Procurement linkage
+
+reference_type + reference_id ilə purchase receipt bağlanacaq
+
+28.2. Assignment linkage
+
+Issue endpoint gələcək employee assignment flow ilə genişlənə bilər
+
+28.3. Barcode/QR
+
+Lookup və detail endpoint-lər future scan flow üçün hazır olmalıdır
+
+28.4. Notifications
+
+Low stock alert event-ləri notification engine-ə bağlanacaq
+
+28.5. AI
+
+Dashboard və alert endpoint-ləri AI recommendation layer ilə genişlənə bilər
+
+29. Antigravity üçün implementation notes
+
+Antigravity bu sənədə əsasən işləyərkən:
+
+Endpoint-ləri app-level view/controller və service layer ayrımı ilə yazmalıdır
+Business logic serializer/view içində dağınıq saxlanmamalıdır
+Receive/issue/transfer/adjustment əməliyyatları ayrıca command service ilə qurulmalıdır
+Error code-lar sabit string contract kimi saxlanmalıdır
+Permission guard-lar decorator/middleware/service check kombinasiyası ilə qorunmalıdır
+Audit event emission ayrı reusable mexanizm ilə qurulmalıdır
+Serialized və quantity flow-lar üçün ayrı serializer/service logic yazılmalıdır
+Future procurement/assignment modulları üçün reference fields qorunmalıdır
+Risklər və boşluqlar
+1. CRUD yanaşması ilə bütün flow-ları eyniləşdirmək
+
+Receive, issue, transfer və adjustment sadə update endpoint-lərlə yazılsa modul zəifləyər.
+
+2. Movement create ilə quantity update-ni ayırmaq
+
+Transaction dağılarsa balans səhv düşər.
+
+3. Permission-ləri yalnız frontend-də saxlamaq
+
+Security zəifliyi yaradar.
+
+4. Serialized flow-u quantity logic ilə qarışdırmaq
+
+Gələcək asset linkage pozular.
+
+5. Error contract sabit olmamaq
+
+Frontend və mobile sonradan qarışar.
+
+6. Audit trigger-ləri unutmaq
+
+Məhsul etibarı və izlənəbilənlik zəifləyər.
+
+Tövsiyə olunan qərar
+
+Mənim professional qərarım budur:
+
+Bu sənəd Module 01 backend davranış müqaviləsi kimi qəbul edilməlidir.
+Antigravity əvvəl:
+
+models
+services
+permission guards
+audit hooks
+API endpoints
+bu sənədə uyğun qurmalıdır.
+
+Xüsusilə aşağıdakılar dəyişdirilməməlidir:
+
+command-style stock operations
+immutable movement history
+company-scoped access
+serialized vs quantity separation
+backend permission enforcement
+atomic transaction rules
