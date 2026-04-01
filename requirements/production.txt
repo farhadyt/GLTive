@@ -1,0 +1,6 @@
+# Purpose: Production-only Python dependencies for GLTive platform
+
+-r base.txt
+
+# Production WSGI server
+gunicorn>=22.0,<23.0

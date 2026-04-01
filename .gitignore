@@ -1,10 +1,4 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.sqlite3
-*.db
+# Purpose: Git ignore rules for GLTive platform
 
 # =========================
 # Python / Django
@@ -85,62 +79,3 @@ docker-compose.override.yml
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# Django
-media/
-staticfiles/
-*.log
-local_settings.py
-
-# Virtual env
-venv/
-.venv/
-env/
-ENV/
-
-# Environment files
-.env
-.env.*
-!.env.example
-
-# Node
-node_modules/
-dist/
-build/
-coverage/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# React / frontend
-.next/
-out/
-
-# OS / Editor
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
-
-# Testing / cache
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-htmlcov/
-
-# Celery / Redis / temp
-celerybeat-schedule
-*.pid
-tmp/
-temp/
-
-# Docker overrides / local-only
-docker-compose.override.yml
-
-# Secrets / keys
-*.pem
-*.key
-*.crt
-secrets/

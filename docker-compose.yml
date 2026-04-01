@@ -1,0 +1,29 @@
+# Purpose: Docker Compose for local GLTive backend development infrastructure
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: gltive_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: gltive
+      POSTGRES_USER: gltive
+      POSTGRES_PASSWORD: gltive_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - gltive_pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: gltive_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - gltive_redisdata:/data
+
+volumes:
+  gltive_pgdata:
+  gltive_redisdata:

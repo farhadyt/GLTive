@@ -1,0 +1,26 @@
+# Purpose: Base Python dependencies for GLTive platform
+
+# Django
+Django>=5.1,<6.0
+djangorestframework>=3.15,<4.0
+django-filter>=24.0,<25.0
+
+# PostgreSQL
+psycopg2-binary>=2.9,<3.0
+
+# JWT Authentication
+djangorestframework-simplejwt>=5.3,<6.0
+
+# Redis and Celery
+redis>=5.0,<6.0
+celery>=5.4,<6.0
+django-celery-beat>=2.6,<3.0
+
+# Environment variables
+python-dotenv>=1.0,<2.0
+
+# CORS
+django-cors-headers>=4.3,<5.0
+
+# Internationalization
+django-modeltranslation>=0.19,<1.0
