@@ -24,5 +24,5 @@ The `core/` package is the platform nucleus. It owns:
 ## Rules
 
 - All business models across the platform **must** inherit from `core.models.base.BaseModel`
-- Company-scoped models **must** use `CompanyScopedMixin`
+- Company-scoped models **must** use `CompanyScopedModel`
 - No module should bypass tenant isolation

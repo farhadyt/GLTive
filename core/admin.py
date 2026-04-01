@@ -1,4 +1,3 @@
-# Purpose: Django admin registration for core models
-from django.contrib import admin
-
-# TODO: Register Tenant, Company, and User models in admin after implementation
+# Purpose: Django admin is intentionally disabled for the GLTive platform
+# GLTive uses its own platform admin UI and does not rely on Django's
+# built-in admin interface. This file is kept as a no-op placeholder.

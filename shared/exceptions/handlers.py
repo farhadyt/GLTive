@@ -23,30 +23,35 @@ def gltive_exception_handler(exc, context):
     """
     response = exception_handler(exc, context)
 
-    if response is not None:
-        error_data = {
-            "success": False,
-            "error": {
-                "code": _get_error_code(exc, response),
-                "message": _get_error_message(exc, response),
-                "details": {},
-                "field_errors": {},
-            },
-        }
+    if response is None:
+        return None
 
-        # Extract field-level validation errors
-        if hasattr(response, "data") and isinstance(response.data, dict):
-            field_errors = {}
-            for field, errors in response.data.items():
-                if field != "detail":
-                    field_errors[field] = (
-                        errors if isinstance(errors, list) else [str(errors)]
-                    )
-            if field_errors:
-                error_data["error"]["field_errors"] = field_errors
+    error_data = {
+        "success": False,
+        "error": {
+            "code": _get_error_code(exc, response),
+            "message": _get_error_message(exc, response),
+            "details": {},
+            "field_errors": {},
+        },
+    }
 
-        response.data = error_data
+    # Extract field-level validation errors safely
+    if hasattr(response, "data") and isinstance(response.data, dict):
+        field_errors = {}
+        for field, errors in response.data.items():
+            if field == "detail":
+                continue
+            try:
+                field_errors[field] = (
+                    errors if isinstance(errors, list) else [str(errors)]
+                )
+            except (TypeError, ValueError):
+                field_errors[field] = [str(errors)]
+        if field_errors:
+            error_data["error"]["field_errors"] = field_errors
 
+    response.data = error_data
     return response
 
 
@@ -72,4 +77,6 @@ def _get_error_message(exc, response):
             return detail
         if isinstance(detail, list) and detail:
             return str(detail[0])
+        if isinstance(detail, dict) and "detail" in detail:
+            return str(detail["detail"])
     return str(exc)
