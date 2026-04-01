@@ -33,6 +33,8 @@ class User(AbstractUser):
         blank=True,
         related_name="users",
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "users"

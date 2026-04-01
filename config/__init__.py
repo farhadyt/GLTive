@@ -1,9 +1,12 @@
 # Purpose: Marks config as a Python package and initializes Celery app
-try:
-    from config.celery import app as celery_app
+import sys
 
-    __all__ = ["celery_app"]
-except ImportError:
-    # Celery is optional during basic Django management commands
-    # (e.g., migrate, check) when async infrastructure is unavailable.
-    pass
+# Skip Celery initialization for purely local/schema management commands 
+# to ensure they don't fail if async infrastructure is unavailable.
+_skip_cmds = {"makemigrations", "migrate", "showmigrations", "check"}
+if not _skip_cmds.intersection(sys.argv):
+    try:
+        from config.celery import app as celery_app
+        __all__ = ["celery_app"]
+    except ImportError:
+        pass
