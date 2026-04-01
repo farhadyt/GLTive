@@ -40,8 +40,8 @@ THIRD_PARTY_APPS = [
 ]
 
 PLATFORM_APPS = [
-    "core",
-    "audit",
+    "core.apps.CoreConfig",
+    "audit.apps.AuditConfig",
     "modules.stock.apps.StockConfig",
 ]
 

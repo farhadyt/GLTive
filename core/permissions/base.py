@@ -21,5 +21,6 @@ class IsCompanyMember(BasePermission):
     """
 
     def has_permission(self, request, view):
-        # TODO: Check request.user.company is not None
+        # WARNING: This is a placeholder only — does NOT check company membership yet
+        # TODO: Replace with actual company scope check before production use
         return request.user and request.user.is_authenticated

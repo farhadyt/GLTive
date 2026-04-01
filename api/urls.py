@@ -5,7 +5,6 @@ All module APIs are namespaced under /api/v1/.
 """
 from django.urls import path
 
-app_name = "api"
 
 # TODO: Include module-level URL configs as they are implemented
 # Example:
