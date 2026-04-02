@@ -5,6 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Replaced hardcoded "core.User" with settings.AUTH_USER_MODEL
+  in audit/models/log.py
 
 ## [0.3.3] - 2026-04-02
 ### Fixed

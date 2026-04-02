@@ -3,6 +3,7 @@
 GLTive Audit Model
 Guarantees the persistence of immutable audit events globally.
 """
+from django.conf import settings
 from django.db import models
 from core.models.base import BaseModel
 
@@ -14,7 +15,7 @@ class AuditLog(BaseModel):
     """
 
     actor_user = models.ForeignKey(
-        "core.User",
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
