@@ -1,7 +1,7 @@
 from django.db import models
-from core.models.base import CompanyScopedModel, SoftDeleteModel
+from core.models.base import CompanyScopedModel
 
-class StockSerialUnit(CompanyScopedModel, SoftDeleteModel):
+class StockSerialUnit(CompanyScopedModel):
     """
     Individual serialized units for serial-tracked inventory.
     """
@@ -72,6 +72,7 @@ class StockSerialUnit(CompanyScopedModel, SoftDeleteModel):
         indexes = [
             models.Index(fields=["company", "stock_item", "stock_status", "is_deleted"]),
             models.Index(fields=["company", "warehouse", "stock_status", "is_deleted"]),
+            models.Index(fields=["company", "serial_number"]),
         ]
 
     def __str__(self):

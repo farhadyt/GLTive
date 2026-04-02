@@ -1,9 +1,11 @@
+import uuid
 from django.db import models
-from core.models.base import CompanyScopedModel
+from core.models.base import AuditableModel
 
-class StockAlertRule(CompanyScopedModel):
+class StockAlertRule(AuditableModel):
     """
     Defines threshold/alert policies.
+    No soft delete, only is_active deactivate logic.
     """
     RULE_MINIMUM_STOCK = "minimum_stock"
 
@@ -11,6 +13,12 @@ class StockAlertRule(CompanyScopedModel):
         (RULE_MINIMUM_STOCK, "Minimum Stock"),
     ]
 
+    company = models.ForeignKey(
+        "core.Company",
+        on_delete=models.RESTRICT,
+        related_name="stock_alert_rules",
+        db_index=True
+    )
     stock_item = models.ForeignKey(
         "stock.StockItem",
         on_delete=models.CASCADE,
@@ -40,9 +48,10 @@ class StockAlertRule(CompanyScopedModel):
         return f"{self.rule_type} on {self.stock_item}"
 
 
-class StockAlertEvent(CompanyScopedModel):
+class StockAlertEvent(models.Model):
     """
     Stores alert trigger history/event record.
+    Status-driven, strictly no soft-delete or updated_at.
     """
     STATUS_OPEN = "open"
     STATUS_ACKNOWLEDGED = "acknowledged"
@@ -54,6 +63,13 @@ class StockAlertEvent(CompanyScopedModel):
         (STATUS_RESOLVED, "Resolved"),
     ]
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    company = models.ForeignKey(
+        "core.Company",
+        on_delete=models.RESTRICT,
+        related_name="stock_alert_events",
+        db_index=True
+    )
     stock_item = models.ForeignKey(
         "stock.StockItem",
         on_delete=models.CASCADE,
@@ -90,6 +106,8 @@ class StockAlertEvent(CompanyScopedModel):
         related_name="resolved_stock_alerts"
     )
     resolved_at = models.DateTimeField(null=True, blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
         db_table = "stock_alert_events"

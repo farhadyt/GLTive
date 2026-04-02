@@ -1,9 +1,10 @@
 from django.db import models
-from core.models.base import CompanyScopedModel
+from core.models.base import BaseModel
 
-class StockAdjustmentSession(CompanyScopedModel):
+class StockAdjustmentSession(BaseModel):
     """
     Session for grouping stock counts and reconciliation.
+    Lifecycle is status-driven. No soft delete.
     """
     STATUS_DRAFT = "draft"
     STATUS_CONFIRMED = "confirmed"
@@ -15,6 +16,12 @@ class StockAdjustmentSession(CompanyScopedModel):
         (STATUS_CANCELLED, "Cancelled"),
     ]
 
+    company = models.ForeignKey(
+        "core.Company",
+        on_delete=models.RESTRICT,
+        related_name="stock_adjustment_sessions",
+        db_index=True
+    )
     warehouse = models.ForeignKey(
         "stock.Warehouse",
         on_delete=models.RESTRICT,
@@ -24,6 +31,13 @@ class StockAdjustmentSession(CompanyScopedModel):
     reason = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_DRAFT, db_index=True)
     
+    created_by = models.ForeignKey(
+        "core.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="created_adjustments"
+    )
     confirmed_by = models.ForeignKey(
         "core.User",
         on_delete=models.SET_NULL,
@@ -45,6 +59,8 @@ class StockAdjustmentSession(CompanyScopedModel):
         ]
         indexes = [
             models.Index(fields=["company", "warehouse", "status"]),
+            # Base model provides ordering by -created_at
+            # Index on created_at is automatically handled or optionally explicit
             models.Index(fields=["company", "-created_at"]),
         ]
 
@@ -52,10 +68,17 @@ class StockAdjustmentSession(CompanyScopedModel):
         return f"{self.session_code} - {self.status}"
 
 
-class StockAdjustmentLine(CompanyScopedModel):
+class StockAdjustmentLine(BaseModel):
     """
     Line-level detail under an adjustment session.
+    No soft delete.
     """
+    company = models.ForeignKey(
+        "core.Company",
+        on_delete=models.RESTRICT,
+        related_name="stock_adjustment_lines",
+        db_index=True
+    )
     adjustment_session = models.ForeignKey(
         StockAdjustmentSession,
         on_delete=models.CASCADE,
@@ -83,6 +106,7 @@ class StockAdjustmentLine(CompanyScopedModel):
         ]
         indexes = [
             models.Index(fields=["company", "stock_item"]),
+            models.Index(fields=["adjustment_session"]),
         ]
 
     def __str__(self):

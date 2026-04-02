@@ -1,7 +1,7 @@
 from django.db import models
-from core.models.base import CompanyScopedModel, SoftDeleteModel
+from core.models.base import CompanyScopedModel
 
-class StockItem(CompanyScopedModel, SoftDeleteModel):
+class StockItem(CompanyScopedModel):
     """
     Central aggregated stock record for a given model in a specific warehouse.
     """
@@ -31,7 +31,6 @@ class StockItem(CompanyScopedModel, SoftDeleteModel):
     last_issued_at = models.DateTimeField(null=True, blank=True, db_index=True)
     
     notes = models.TextField(blank=True)
-    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "stock_items"

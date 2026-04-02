@@ -1,7 +1,7 @@
 from django.db import models
-from core.models.base import CompanyScopedModel, SoftDeleteModel
+from core.models.base import CompanyScopedModel
 
-class Brand(CompanyScopedModel, SoftDeleteModel):
+class Brand(CompanyScopedModel):
     """
     Brand or manufacturer registry for stock references.
     """
@@ -9,7 +9,6 @@ class Brand(CompanyScopedModel, SoftDeleteModel):
     normalized_name = models.CharField(max_length=150, db_index=True)
     description = models.TextField(blank=True)
     website = models.URLField(max_length=255, blank=True)
-    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "brands"
@@ -24,6 +23,7 @@ class Brand(CompanyScopedModel, SoftDeleteModel):
         ]
         indexes = [
             models.Index(fields=["company", "is_active", "is_deleted"]),
+            models.Index(fields=["company", "normalized_name"]),
         ]
 
     def __str__(self):

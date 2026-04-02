@@ -12,10 +12,12 @@ The Stock & Inventory Foundation is the foundational module capturing all raw as
 - **Asset Assignment Lifecycle:** 🟡 Not in Scope for Phase 1 (Intentional design).
 
 ## Enforcement Rules Configured
+- **StockMovement** immutability is strictly enforced via codebase hooks. No soft delete mechanisms or update lifecycle fields exist.
 - **StockItems** are strictly warehouse-bound (`warehouse_id` enforced).
-- **StockMovement** immutability is strictly enforced via codebase hooks.
 - **StockItem** tracks `last_received_at` and `last_issued_at` for high-performance dashboarding.
 - **StockSerialUnit** `serial_number` mapping uniqueness is isolated exclusively to a per-company scope.
+- **Warehouse** future location linkage explicitly provisioned via `location_reference_id` nullable hooks.
+- **Status Lifecycles Driven Models** (`StockAdjustmentSession`, `StockAlertEvent`) strictly bypass default soft-deletion inheritance conforming strictly to the explicit Field Dictionary architecture.
 
 ## Entities
 1. `stock_item_categories`

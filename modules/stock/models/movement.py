@@ -1,10 +1,10 @@
-from django.db import models
-from core.models.base import CompanyScopedModel
 import uuid
+from django.db import models
 
-class StockMovement(CompanyScopedModel):
+class StockMovement(models.Model):
     """
     Immutable stock movement history foundation.
+    No soft deletes, no updates, no standard lifecycle tracking.
     """
     TYPE_STOCK_IN = "stock_in"
     TYPE_STOCK_OUT = "stock_out"
@@ -26,6 +26,14 @@ class StockMovement(CompanyScopedModel):
         (TYPE_RELEASE_RESERVE, "Release Reserve"),
     ]
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    company = models.ForeignKey(
+        "core.Company",
+        on_delete=models.RESTRICT,
+        related_name="stock_movements",
+        db_index=True
+    )
+    
     movement_type = models.CharField(max_length=30, choices=TYPE_CHOICES, db_index=True)
     
     stock_item = models.ForeignKey(
@@ -72,6 +80,7 @@ class StockMovement(CompanyScopedModel):
         related_name="performed_stock_movements"
     )
     performed_at = models.DateTimeField(db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "stock_movements"
@@ -82,6 +91,7 @@ class StockMovement(CompanyScopedModel):
             models.Index(fields=["company", "movement_type", "-performed_at"]),
             models.Index(fields=["company", "source_warehouse", "-performed_at"]),
             models.Index(fields=["company", "target_warehouse", "-performed_at"]),
+            models.Index(fields=["company", "reference_type", "reference_id"]),
         ]
 
     def __str__(self):

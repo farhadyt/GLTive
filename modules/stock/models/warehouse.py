@@ -1,18 +1,17 @@
 from django.db import models
-from core.models.base import CompanyScopedModel, SoftDeleteModel
+from core.models.base import CompanyScopedModel
 
-class Warehouse(CompanyScopedModel, SoftDeleteModel):
+class Warehouse(CompanyScopedModel):
     """
     Physical warehouse or storage location anchor.
     """
     code = models.CharField(max_length=50, db_index=True)
     name = models.CharField(max_length=150, db_index=True)
     
-    # location_reference_id = models.UUIDField(null=True, blank=True)  # Future capability
+    location_reference_id = models.UUIDField(null=True, blank=True, db_index=True)
     
     description = models.TextField(blank=True)
     is_default = models.BooleanField(default=False, db_index=True)
-    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "warehouses"

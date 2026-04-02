@@ -1,7 +1,7 @@
 from django.db import models
-from core.models.base import CompanyScopedModel, SoftDeleteModel
+from core.models.base import CompanyScopedModel
 
-class StockCategory(CompanyScopedModel, SoftDeleteModel):
+class StockCategory(CompanyScopedModel):
     """
     Classification for stock items.
     """
@@ -16,7 +16,6 @@ class StockCategory(CompanyScopedModel, SoftDeleteModel):
     name = models.CharField(max_length=150, db_index=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField(default=0)
-    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "stock_item_categories"
@@ -32,6 +31,7 @@ class StockCategory(CompanyScopedModel, SoftDeleteModel):
         indexes = [
             models.Index(fields=["company", "is_active", "is_deleted"]),
             models.Index(fields=["company", "parent_category"]),
+            models.Index(fields=["company", "name"]),
         ]
 
     def __str__(self):

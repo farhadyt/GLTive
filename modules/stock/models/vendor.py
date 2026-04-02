@@ -1,7 +1,7 @@
 from django.db import models
-from core.models.base import CompanyScopedModel, SoftDeleteModel
+from core.models.base import CompanyScopedModel
 
-class Vendor(CompanyScopedModel, SoftDeleteModel):
+class Vendor(CompanyScopedModel):
     """
     Vendor / supplier registry for procurement and stock references.
     """
@@ -13,7 +13,6 @@ class Vendor(CompanyScopedModel, SoftDeleteModel):
     phone = models.CharField(max_length=50, blank=True)
     address = models.TextField(blank=True)
     notes = models.TextField(blank=True)
-    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "vendor_references"
@@ -33,6 +32,8 @@ class Vendor(CompanyScopedModel, SoftDeleteModel):
         ]
         indexes = [
             models.Index(fields=["company", "is_active", "is_deleted"]),
+            models.Index(fields=["company", "normalized_name"]),
+            models.Index(fields=["company", "code"]),
         ]
 
     def __str__(self):

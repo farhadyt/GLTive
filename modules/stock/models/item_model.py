@@ -1,7 +1,7 @@
 from django.db import models
-from core.models.base import CompanyScopedModel, SoftDeleteModel
+from core.models.base import CompanyScopedModel
 
-class ItemModel(CompanyScopedModel, SoftDeleteModel):
+class ItemModel(CompanyScopedModel):
     """
     Standard model/template definition of an item type.
     """
@@ -50,8 +50,6 @@ class ItemModel(CompanyScopedModel, SoftDeleteModel):
         blank=True
     )
     image_url = models.URLField(max_length=500, blank=True)
-    
-    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "item_models"
@@ -72,6 +70,7 @@ class ItemModel(CompanyScopedModel, SoftDeleteModel):
         indexes = [
             models.Index(fields=["company", "category", "is_active", "is_deleted"]),
             models.Index(fields=["company", "tracking_type", "is_active", "is_deleted"]),
+            models.Index(fields=["company", "normalized_model_name"]),
         ]
 
     def __str__(self):

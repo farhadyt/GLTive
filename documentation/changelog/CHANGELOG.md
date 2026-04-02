@@ -6,6 +6,14 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-04-02
+### Fixed
+- **Stock Module Data Alignment Pass:** Hard-coupled models to the v1.0 Field Dictionary explicitly decoupling contract-violating behavior inherited historically via soft-delete mixins.
+- Immutability strictly modeled on `StockMovement` purging `is_deleted` and `updated_at` mechanisms.
+- Clean Status logic implemented for adjustments and events directly bypassing global soft-delete schemas.
+- Future location hooks safely mapped into the Phase 1 `Warehouse` context schema via `location_reference_id`.
+- Added missing recommended index patterns.
+
 ## [0.3.0] - 2026-04-02
 ### Added
 - Stock Module Data Foundation implemented safely under `modules/stock/models`.
