@@ -1,31 +1,27 @@
-# Purpose: Tenant resolution middleware placeholder for company-scoped request context
+# Purpose: Evaluates company context for each authenticated request
 """
 GLTive Tenant Middleware
-Resolves current tenant/company from the authenticated user's context
-and attaches it to the request for downstream use.
-
-TODO: Implement tenant resolution:
-- Extract company from authenticated user
-- Attach request.company for use in views and services
-- Handle vendor admin vs company admin context
-- Enforce tenant isolation at middleware level
+Extracts company context from an authenticated user and attaches it directly
+to the request object for safe usage within views and serializers.
 """
+from django.utils.deprecation import MiddlewareMixin
 
 
-class TenantMiddleware:
+class TenantMiddleware(MiddlewareMixin):
     """
-    Middleware to resolve and attach the current company context to each request.
-
-    Usage:
-        After implementation, add to MIDDLEWARE in settings:
-        'core.middleware.tenant.TenantMiddleware'
+    Middleware that ensures request.company is always populated consistently.
+    If the request has an authenticated user attached to a company, request.company = user.company.
+    Otherwise, request.company is explicitly None.
+    
+    This middleware never throws 403s itself; it simply populates context 
+    and leaves access control to permission classes.
     """
 
-    def __init__(self, get_response):
-        self.get_response = get_response
+    def process_request(self, request):
+        # Default state
+        request.company = None
 
-    def __call__(self, request):
-        # TODO: Resolve company from authenticated user
-        # request.company = resolve_company(request.user)
-        response = self.get_response(request)
-        return response
+        if hasattr(request, "user") and request.user.is_authenticated:
+            # If the user has an attached company (standard case)
+            if hasattr(request.user, "company") and request.user.company:
+                request.company = request.user.company

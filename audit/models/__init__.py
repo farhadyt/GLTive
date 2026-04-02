@@ -1,2 +1,2 @@
-# Purpose: Audit models package — will contain the immutable audit log model
-# TODO: Implement AuditLog model with fields per audit payload contract
+# Purpose: Audit models package — contains the immutable audit log model
+from audit.models.log import AuditLog  # noqa: F401

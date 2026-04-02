@@ -6,6 +6,15 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-04-02
+### Added
+- Core Access Foundation implementation.
+- Minimal `Role` and `Permission` DB-backed structure mapping explicitly to companies.
+- `TenantMiddleware` enforcing explicit `request.company` contexts on authenticated requests.
+- Custom authentication endpoints (`login`, `refresh`, `logout`) wrapped in standard JSON response envelopes, with `company_id` mapped into JWT payloads.
+- `CompanyScopedViewSet` base API class to strictly firewall querysets to the active tenant company.
+- Immutable `AuditLog` models and `AuditService.log_event` hook for immutable global record keeping.
+
 ## [0.1.0] - 2026-03-31
 ### Added
 - Backend foundation skeleton with modular monolith architecture

@@ -1,1 +1,2 @@
-# Purpose: Marks core.middleware as a Python package
+# Purpose: Exposes middleware pieces
+from core.middleware.tenant import TenantMiddleware  # noqa: F401

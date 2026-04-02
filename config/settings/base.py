@@ -60,7 +60,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # TODO: Add core.middleware.tenant.TenantMiddleware after implementation
+    "core.middleware.tenant.TenantMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"

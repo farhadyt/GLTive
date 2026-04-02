@@ -1,1 +1,1 @@
-# Purpose: Marks core.auth as a Python package
+# Purpose: Core Authentication Module

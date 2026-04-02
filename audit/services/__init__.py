@@ -1,2 +1,2 @@
-# Purpose: Audit services package — will contain the audit event emission service
-# TODO: Implement AuditService.log_event() for reusable audit emission
+# Purpose: Export audit services
+from audit.services.logger import AuditService  # noqa: F401
