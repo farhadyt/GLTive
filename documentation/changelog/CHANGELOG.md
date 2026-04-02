@@ -6,6 +6,14 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-04-02
+### Fixed
+- Replaced all hardcoded "core.User" FK references in stock models
+  with settings.AUTH_USER_MODEL (affected: adjustment.py, alert.py,
+  movement.py) — aligns with platform-wide Django best practice
+- Added explicit ordering = ["-created_at"] to StockAlertEvent Meta
+- Added explicit ordering = ["-created_at"] to StockAdjustmentSession Meta
+
 ## [0.3.2] - 2026-04-02
 ### Fixed
 - **Stock Module Final Contract Correction Pass:** Restored explicitly declared `is_active` fields back into all core definition blocks (Category, Brand, Vendor, ItemModel, Warehouse, StockItem) guaranteeing strict explicit structural alignment against dictionary checks.

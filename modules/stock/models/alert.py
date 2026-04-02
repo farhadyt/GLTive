@@ -1,4 +1,5 @@
 import uuid
+from django.conf import settings
 from django.db import models
 from core.models.base import AuditableModel
 
@@ -90,7 +91,7 @@ class StockAlertEvent(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_OPEN, db_index=True)
     
     acknowledged_by = models.ForeignKey(
-        "core.User",
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -99,7 +100,7 @@ class StockAlertEvent(models.Model):
     acknowledged_at = models.DateTimeField(null=True, blank=True)
     
     resolved_by = models.ForeignKey(
-        "core.User",
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -113,6 +114,7 @@ class StockAlertEvent(models.Model):
         db_table = "stock_alert_events"
         verbose_name = "Stock Alert Event"
         verbose_name_plural = "Stock Alert Events"
+        ordering = ["-created_at"]
         indexes = [
             models.Index(fields=["company", "status", "-created_at"]),
             models.Index(fields=["company", "stock_item", "status"]),

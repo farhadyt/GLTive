@@ -1,4 +1,5 @@
 import uuid
+from django.conf import settings
 from django.db import models
 
 class StockMovement(models.Model):
@@ -73,7 +74,7 @@ class StockMovement(models.Model):
     note = models.TextField(blank=True)
     
     performed_by = models.ForeignKey(
-        "core.User",
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

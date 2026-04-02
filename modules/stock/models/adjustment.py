@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from core.models.base import BaseModel
 
@@ -32,14 +33,14 @@ class StockAdjustmentSession(BaseModel):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_DRAFT, db_index=True)
     
     created_by = models.ForeignKey(
-        "core.User",
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="created_adjustments"
     )
     confirmed_by = models.ForeignKey(
-        "core.User",
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -51,6 +52,7 @@ class StockAdjustmentSession(BaseModel):
         db_table = "stock_adjustment_sessions"
         verbose_name = "Adjustment Session"
         verbose_name_plural = "Adjustment Sessions"
+        ordering = ["-created_at"]
         constraints = [
             models.UniqueConstraint(
                 fields=["company", "session_code"],
@@ -59,8 +61,7 @@ class StockAdjustmentSession(BaseModel):
         ]
         indexes = [
             models.Index(fields=["company", "warehouse", "status"]),
-            # Base model provides ordering by -created_at
-            # Index on created_at is automatically handled or optionally explicit
+
             models.Index(fields=["company", "-created_at"]),
         ]
 
