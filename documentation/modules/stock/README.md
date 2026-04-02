@@ -4,9 +4,18 @@ Last Updated: 2026-04-01
 
 The Stock & Inventory Foundation is the foundational module capturing all raw assets, their lifecycle states, tracking configurations, and real-time physical locations for Phase 1.
 
-## Scope
-**In Scope:** Categories, brands, vendors, item models, warehouses, stock items, serial units, movements, adjustments, alerts, dashboard.
-**Not in Scope for Phase 1:** Full asset lifecycle, comprehensive procurement tracking, HR linkage, complex QR/barcode generation.
+## Implementation Status
+- **Data Models:** ✅ Implemented. All 12 base stock models are fully created with company isolation.
+- **Service Layer:** 🟡 Not Implemented (Pending next phase).
+- **API Endpoints:** 🟡 Not Implemented (Pending next phase).
+- **Dynamic Attributes:** 🟡 Not in Scope for Phase 1 (Intentional design).
+- **Asset Assignment Lifecycle:** 🟡 Not in Scope for Phase 1 (Intentional design).
+
+## Enforcement Rules Configured
+- **StockItems** are strictly warehouse-bound (`warehouse_id` enforced).
+- **StockMovement** immutability is strictly enforced via codebase hooks.
+- **StockItem** tracks `last_received_at` and `last_issued_at` for high-performance dashboarding.
+- **StockSerialUnit** `serial_number` mapping uniqueness is isolated exclusively to a per-company scope.
 
 ## Entities
 1. `stock_item_categories`

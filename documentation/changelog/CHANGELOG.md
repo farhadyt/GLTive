@@ -6,6 +6,13 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-02
+### Added
+- Stock Module Data Foundation implemented safely under `modules/stock/models`.
+- 12 authoritative models explicitly capturing categories, items, warehouses, serial unit state routing, and structural thresholds without prematurely importing Service or API layers.
+- Enforced hard `StockMovement` immutable tracking guarantees.
+- Native `CompanyScopedModel` implementations with robust constraints mapped correctly inside the PostgreSQL infrastructure.
+
 ## [0.2.0] - 2026-04-02
 ### Added
 - Core Access Foundation implementation.
