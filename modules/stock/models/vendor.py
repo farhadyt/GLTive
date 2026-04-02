@@ -13,6 +13,7 @@ class Vendor(CompanyScopedModel):
     phone = models.CharField(max_length=50, blank=True)
     address = models.TextField(blank=True)
     notes = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "vendor_references"

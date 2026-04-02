@@ -9,6 +9,7 @@ class Brand(CompanyScopedModel):
     normalized_name = models.CharField(max_length=150, db_index=True)
     description = models.TextField(blank=True)
     website = models.URLField(max_length=255, blank=True)
+    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "brands"

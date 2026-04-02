@@ -16,6 +16,7 @@ class StockCategory(CompanyScopedModel):
     name = models.CharField(max_length=150, db_index=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "stock_item_categories"

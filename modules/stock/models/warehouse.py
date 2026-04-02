@@ -12,6 +12,7 @@ class Warehouse(CompanyScopedModel):
     
     description = models.TextField(blank=True)
     is_default = models.BooleanField(default=False, db_index=True)
+    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "warehouses"

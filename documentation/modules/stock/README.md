@@ -18,6 +18,7 @@ The Stock & Inventory Foundation is the foundational module capturing all raw as
 - **StockSerialUnit** `serial_number` mapping uniqueness is isolated exclusively to a per-company scope.
 - **Warehouse** future location linkage explicitly provisioned via `location_reference_id` nullable hooks.
 - **Status Lifecycles Driven Models** (`StockAdjustmentSession`, `StockAlertEvent`) strictly bypass default soft-deletion inheritance conforming strictly to the explicit Field Dictionary architecture.
+- **Soft-Delete Master Entities** (`StockCategory`, `Brand`, `Vendor`, `ItemModel`, `Warehouse`, `StockItem`) explicitly define required `is_active` constraints locally per strict schema dictations.
 
 ## Entities
 1. `stock_item_categories`

@@ -50,6 +50,8 @@ class ItemModel(CompanyScopedModel):
         blank=True
     )
     image_url = models.URLField(max_length=500, blank=True)
+    
+    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "item_models"

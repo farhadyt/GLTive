@@ -6,6 +6,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-04-02
+### Fixed
+- **Stock Module Final Contract Correction Pass:** Restored explicitly declared `is_active` fields back into all core definition blocks (Category, Brand, Vendor, ItemModel, Warehouse, StockItem) guaranteeing strict explicit structural alignment against dictionary checks.
+
 ## [0.3.1] - 2026-04-02
 ### Fixed
 - **Stock Module Data Alignment Pass:** Hard-coupled models to the v1.0 Field Dictionary explicitly decoupling contract-violating behavior inherited historically via soft-delete mixins.

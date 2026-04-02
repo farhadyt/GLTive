@@ -31,6 +31,7 @@ class StockItem(CompanyScopedModel):
     last_issued_at = models.DateTimeField(null=True, blank=True, db_index=True)
     
     notes = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         db_table = "stock_items"
