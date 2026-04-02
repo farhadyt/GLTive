@@ -44,17 +44,14 @@ class HasModulePermission(BasePermission):
     """
     Extensible module permission checking.
     Usage:
-        permission_classes = [HasModulePermission("stock.view")]
+        from functools import partial
+        permission_classes = [partial(HasModulePermission, "stock.view")]
     """
-    def __init__(self, required_permission=None):
+    def __init__(self, required_permission):
         self.required_permission = required_permission
 
-    def __call__(self):
-        return self
-
     def has_permission(self, request, view):
-        # Allow views to define a static required_permission attribute
-        perm_code = self.required_permission or getattr(view, "required_permission", None)
+        perm_code = self.required_permission
         
         if not perm_code:
             return False

@@ -19,9 +19,8 @@ changes across the platform.
 
 ## Status
 
-**Placeholder** — audit model and service will be implemented in a
-subsequent step. The architecture is defined here to ensure all modules
-emit audit events from day one.
+Audit mechanism is implemented. Not yet wired into every
+module — that happens per module as implementation progresses.
 
 ## Rules
 

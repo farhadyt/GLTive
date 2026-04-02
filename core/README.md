@@ -14,12 +14,12 @@ The `core/` package is the platform nucleus. It owns:
 
 | Component         | Status      |
 |-------------------|-------------|
-| Base model mixins | Foundation  |
-| User model        | Placeholder |
-| Tenant/Company    | Placeholder |
-| Auth backend      | Placeholder |
-| Permissions       | Placeholder |
-| Tenant middleware | Placeholder |
+| Base model mixins | Implemented |
+| User model        | Implemented |
+| Tenant/Company    | Implemented |
+| Auth backend      | Implemented |
+| Permissions       | Implemented |
+| Tenant middleware | Implemented |
 
 ## Rules
 
