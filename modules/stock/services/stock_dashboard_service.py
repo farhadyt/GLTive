@@ -73,8 +73,8 @@ class StockDashboardService:
                 "quantity": str(mv.quantity),
                 "performed_at": mv.performed_at.isoformat(),
                 "performed_by_username": str(mv.performed_by.username) if mv.performed_by else None,
-                "source_warehouse_name": str(mv.source_warehouse.warehouse_name) if mv.source_warehouse else None,
-                "target_warehouse_name": str(mv.target_warehouse.warehouse_name) if mv.target_warehouse else None,
+                "source_warehouse_name": str(mv.source_warehouse.name) if mv.source_warehouse else None,
+                "target_warehouse_name": str(mv.target_warehouse.name) if mv.target_warehouse else None,
             })
         
         return results
@@ -102,8 +102,8 @@ class StockDashboardService:
             results.append({
                 "id": str(item.id),
                 "item_name": str(item_name),
-                "warehouse_code": str(item.warehouse.warehouse_code),
-                "warehouse_name": str(item.warehouse.warehouse_name),
+                "warehouse_code": str(item.warehouse.code),
+                "warehouse_name": str(item.warehouse.name),
                 "quantity_on_hand": str(item.quantity_on_hand),
                 "quantity_available": str(item.quantity_available),
                 "tracking_type": str(item.tracking_type),
