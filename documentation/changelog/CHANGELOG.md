@@ -8,6 +8,20 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Replaced hardcoded "core.User" with settings.AUTH_USER_MODEL
   in audit/models/log.py
 
+## [0.4.0] - 2026-04-03
+### Added
+- Stock Service Layer Part 1: Master Data Services (CategoryService, BrandService,
+  VendorService, ItemModelService, WarehouseService)
+- Company-scoped business validation for create, update, and deactivation operations
+- Deactivation block rules preventing unsafe master data deactivation
+- Audit trail integration via existing AuditService.log_event for all state changes
+- Domain exception hierarchy (StockServiceError, StockNotFoundError, StockValidationError,
+  StockConflictError, StockDeactivationBlockedError)
+- Service utility helpers: snapshot serializer, entity fetcher, normalization functions
+- Warehouse default-swap logic with transaction.atomic and select_for_update safety
+- ItemModel tracking_type immutability enforcement after creation
+- Category cyclic hierarchy detection with depth limit
+
 ## [0.3.3] - 2026-04-02
 ### Fixed
 - Replaced all hardcoded "core.User" FK references in stock models
