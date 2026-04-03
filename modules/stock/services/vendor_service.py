@@ -34,7 +34,7 @@ class VendorService:
 
         if Vendor.objects.filter(
             company=company, normalized_name=normalized,
-            is_active=True, is_deleted=False,
+            is_deleted=False,
         ).exists():
             raise StockConflictError(
                 f"Active vendor with name '{name.strip()}' already exists in this company"
@@ -45,7 +45,7 @@ class VendorService:
             code = normalize_code(code)
             if Vendor.objects.filter(
                 company=company, code=code,
-                is_active=True, is_deleted=False,
+                is_deleted=False,
             ).exists():
                 raise StockConflictError(
                     f"Active vendor with code '{code}' already exists in this company"
@@ -92,7 +92,7 @@ class VendorService:
             if new_normalized != vendor.normalized_name:
                 if Vendor.objects.filter(
                     company=company, normalized_name=new_normalized,
-                    is_active=True, is_deleted=False,
+                    is_deleted=False,
                 ).exclude(pk=vendor.pk).exists():
                     raise StockConflictError(
                         f"Active vendor with name '{new_name}' already exists in this company"
@@ -107,7 +107,7 @@ class VendorService:
                 if new_code != vendor.code:
                     if Vendor.objects.filter(
                         company=company, code=new_code,
-                        is_active=True, is_deleted=False,
+                        is_deleted=False,
                     ).exclude(pk=vendor.pk).exists():
                         raise StockConflictError(
                             f"Active vendor with code '{new_code}' already exists in this company"

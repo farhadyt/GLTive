@@ -8,6 +8,21 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Replaced hardcoded "core.User" with settings.AUTH_USER_MODEL
   in audit/models/log.py
 
+## [0.4.1] - 2026-04-03
+### Fixed
+- Aligned all service-level duplicate checks with actual DB UniqueConstraint
+  conditions (is_deleted=False only, not is_active=True+is_deleted=False)
+  Affected: CategoryService, BrandService, VendorService, ItemModelService,
+  WarehouseService — prevents IntegrityError from constraint mismatch
+- Added composite identity validation (company+category+normalized_model_name+brand)
+  in ItemModelService create and update — prevents DB IntegrityError on the
+  unique_active_item_model_identity_per_company constraint
+- Hardened WarehouseService.create_warehouse first-default logic against
+  concurrency race condition using select_for_update row lock before
+  default-state decision
+- Cleaned up lazy inline imports in WarehouseService (moved to top-level imports)
+- No model changes, no migration changes
+
 ## [0.4.0] - 2026-04-03
 ### Added
 - Stock Service Layer Part 1: Master Data Services (CategoryService, BrandService,

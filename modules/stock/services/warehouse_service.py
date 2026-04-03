@@ -12,6 +12,7 @@ from modules.stock.models.warehouse import Warehouse
 from modules.stock.services.exceptions import (
     StockConflictError,
     StockDeactivationBlockedError,
+    StockNotFoundError,
     StockValidationError,
 )
 from modules.stock.services.utils import (
@@ -39,25 +40,30 @@ class WarehouseService:
 
         code = normalize_code(code)
 
-        if Warehouse.objects.filter(
-            company=company, code=code, is_active=True, is_deleted=False,
-        ).exists():
+        # Lock company warehouse rows to prevent first-default race condition
+        existing_warehouses = list(
+            Warehouse.objects.select_for_update().filter(
+                company=company, is_deleted=False,
+            ).values_list("code", "is_active", "is_default")
+        )
+
+        # Duplicate check aligned with DB constraint: condition=Q(is_deleted=False)
+        existing_codes = {row[0] for row in existing_warehouses}
+        if code in existing_codes:
             raise StockConflictError(
-                f"Active warehouse with code '{code}' already exists in this company"
+                f"Warehouse with code '{code}' already exists in this company"
             )
 
         is_default = data.get("is_default", False)
 
-        # If no active warehouses exist, force default
-        has_warehouses = Warehouse.objects.filter(
-            company=company, is_active=True, is_deleted=False,
-        ).exists()
-        if not has_warehouses:
+        # Determine if any active warehouses exist (for first-default logic)
+        has_active_warehouses = any(row[1] for row in existing_warehouses)
+        if not has_active_warehouses:
             is_default = True
 
-        # If requesting default, clear old default atomically
+        # If requesting default, clear old defaults atomically
         if is_default:
-            Warehouse.objects.select_for_update().filter(
+            Warehouse.objects.filter(
                 company=company, is_default=True, is_active=True, is_deleted=False,
             ).update(is_default=False)
 
@@ -96,12 +102,13 @@ class WarehouseService:
         if "code" in data:
             new_code = normalize_code(data["code"])
             if new_code != warehouse.code:
+                # Duplicate check aligned with DB constraint: condition=Q(is_deleted=False)
                 if Warehouse.objects.filter(
                     company=company, code=new_code,
-                    is_active=True, is_deleted=False,
+                    is_deleted=False,
                 ).exclude(pk=warehouse.pk).exists():
                     raise StockConflictError(
-                        f"Active warehouse with code '{new_code}' already exists in this company"
+                        f"Warehouse with code '{new_code}' already exists in this company"
                     )
                 warehouse.code = new_code
 
@@ -143,7 +150,6 @@ class WarehouseService:
             is_active=True, is_deleted=False,
         ).first()
         if warehouse is None:
-            from modules.stock.services.exceptions import StockNotFoundError
             raise StockNotFoundError(entity_type=ENTITY_TYPE, entity_id=warehouse_id)
 
         # Blocker 1: default warehouse
@@ -207,7 +213,6 @@ class WarehouseService:
             is_active=True, is_deleted=False,
         ).first()
         if warehouse is None:
-            from modules.stock.services.exceptions import StockNotFoundError
             raise StockNotFoundError(entity_type=ENTITY_TYPE, entity_id=warehouse_id)
 
         before = snapshot(warehouse)

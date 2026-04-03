@@ -33,7 +33,7 @@ class BrandService:
 
         if Brand.objects.filter(
             company=company, normalized_name=normalized,
-            is_active=True, is_deleted=False,
+            is_deleted=False,
         ).exists():
             raise StockConflictError(
                 f"Active brand with name '{name.strip()}' already exists in this company"
@@ -76,7 +76,7 @@ class BrandService:
             if new_normalized != brand.normalized_name:
                 if Brand.objects.filter(
                     company=company, normalized_name=new_normalized,
-                    is_active=True, is_deleted=False,
+                    is_deleted=False,
                 ).exclude(pk=brand.pk).exists():
                     raise StockConflictError(
                         f"Active brand with name '{new_name}' already exists in this company"

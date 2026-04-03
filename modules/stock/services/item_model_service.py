@@ -77,15 +77,28 @@ class ItemModelService:
                 active_only=True, entity_name="stock_vendor_reference",
             )
 
-        # Duplicate model_code check
+        # Duplicate model_code check (DB constraint: is_deleted=False, model_code not null)
         if model_code:
             if ItemModel.objects.filter(
                 company=company, model_code=model_code,
-                is_active=True, is_deleted=False,
+                is_deleted=False,
             ).exists():
                 raise StockConflictError(
-                    f"Active item model with code '{model_code}' already exists in this company"
+                    f"Item model with code '{model_code}' already exists in this company"
                 )
+
+        # Composite identity check (DB constraint: company+category+normalized_model_name+brand, is_deleted=False)
+        identity_filter = {
+            "company": company,
+            "category": category,
+            "normalized_model_name": normalized_model_name,
+            "brand": brand,
+            "is_deleted": False,
+        }
+        if ItemModel.objects.filter(**identity_filter).exists():
+            raise StockConflictError(
+                "An item model with the same category, name, and brand already exists in this company"
+            )
 
         item_model = ItemModel.objects.create(
             company=company,
@@ -145,10 +158,10 @@ class ItemModelService:
                 if new_code != item_model.model_code:
                     if ItemModel.objects.filter(
                         company=company, model_code=new_code,
-                        is_active=True, is_deleted=False,
+                        is_deleted=False,
                     ).exclude(pk=item_model.pk).exists():
                         raise StockConflictError(
-                            f"Active item model with code '{new_code}' already exists in this company"
+                            f"Item model with code '{new_code}' already exists in this company"
                         )
                 item_model.model_code = new_code
             else:
@@ -184,6 +197,19 @@ class ItemModelService:
         for field in ("description", "default_unit", "minimum_stock_level", "image_url"):
             if field in data:
                 setattr(item_model, field, data[field])
+
+        # Composite identity check before save (DB constraint: company+category+normalized_model_name+brand, is_deleted=False)
+        identity_filter = {
+            "company": company,
+            "category": item_model.category,
+            "normalized_model_name": item_model.normalized_model_name,
+            "brand": item_model.brand,
+            "is_deleted": False,
+        }
+        if ItemModel.objects.filter(**identity_filter).exclude(pk=item_model.pk).exists():
+            raise StockConflictError(
+                "An item model with the same category, name, and brand already exists in this company"
+            )
 
         item_model.updated_by = actor
         item_model.save()

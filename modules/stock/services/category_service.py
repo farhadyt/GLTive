@@ -39,7 +39,7 @@ class CategoryService:
 
         # Duplicate check
         if StockCategory.objects.filter(
-            company=company, code=code, is_active=True, is_deleted=False
+            company=company, code=code, is_deleted=False
         ).exists():
             raise StockConflictError(
                 f"Active category with code '{code}' already exists in this company"
@@ -91,7 +91,7 @@ class CategoryService:
             new_code = normalize_code(data["code"])
             if new_code != category.code:
                 if StockCategory.objects.filter(
-                    company=company, code=new_code, is_active=True, is_deleted=False,
+                    company=company, code=new_code, is_deleted=False,
                 ).exclude(pk=category.pk).exists():
                     raise StockConflictError(
                         f"Active category with code '{new_code}' already exists in this company"
