@@ -4,7 +4,7 @@ GLTive Base API Foundation
 Provides a reusable viewset foundation to enforce safe cross-company boundary behavior.
 """
 from rest_framework import viewsets
-from django.core.exceptions import ImproperlyConfigured
+from rest_framework.exceptions import PermissionDenied
 
 from core.permissions.base import IsCompanyMember
 
@@ -38,8 +38,12 @@ class CompanyScopedViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """
         Automatically bind the company to newly created entities.
+        Raises PermissionDenied if no company context is available — company-scoped
+        records must never be created without an explicit company binding.
         """
         if hasattr(self.request, "company") and self.request.company:
             serializer.save(company=self.request.company)
         else:
-            super().perform_create(serializer)
+            raise PermissionDenied(
+                "Company context is required to create company-scoped resources."
+            )
