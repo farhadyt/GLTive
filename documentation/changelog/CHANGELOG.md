@@ -8,6 +8,18 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Replaced hardcoded "core.User" with settings.AUTH_USER_MODEL
   in audit/models/log.py
 
+## [0.6.0] - 2026-04-04
+### Added
+- Stock Service Layer Part 3: Adjustment, Alert, and Dashboard Services
+  - StockAdjustmentService: create_adjustment_session, upsert_adjustment_lines, confirm_adjustment_session, cancel_adjustment_session
+  - StockAlertService: evaluate_alerts_for_stock_item, acknowledge_alert, resolve_alert
+  - StockDashboardService: get_summary, get_recent_movements, get_low_stock_items
+- Adjustment confirmation now creates adjustment_plus and adjustment_minus stock movements atomically
+- Auto-generated adjustment session codes with collision retry handling
+- Alert flood prevention to avoid duplicate open events for the same stock item and alert type
+- Standardized dashboard service return format using plain Python dict/list structures
+### Changed
+- Stock module documentation updated to reflect completed service layer implementation
 ## [0.5.1] - 2026-04-03
 ### Fixed
 - Serialized issue now validates quantity_available >= requested count before

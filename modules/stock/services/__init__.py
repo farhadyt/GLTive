@@ -12,3 +12,6 @@ from modules.stock.services.stock_item_service import StockItemService  # noqa: 
 from modules.stock.services.stock_receive_service import StockReceiveService  # noqa: F401
 from modules.stock.services.stock_issue_service import StockIssueService  # noqa: F401
 from modules.stock.services.stock_transfer_service import StockTransferService  # noqa: F401
+from modules.stock.services.stock_adjustment_service import StockAdjustmentService  # noqa: F401
+from modules.stock.services.stock_alert_service import StockAlertService  # noqa: F401
+from modules.stock.services.stock_dashboard_service import StockDashboardService  # noqa: F401
