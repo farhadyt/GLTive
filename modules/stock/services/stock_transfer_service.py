@@ -117,6 +117,8 @@ class StockTransferService:
         if source.quantity_available < quantity:
             raise StockValidationError("Insufficient stock for transfer", field="quantity")
 
+        before_source = snapshot(source)
+
         # Race-safe find-or-create target stock item
         target = _get_or_create_target_stock_item(company, source, target_warehouse, actor)
 
@@ -125,12 +127,14 @@ class StockTransferService:
         # Update source quantities
         source.quantity_on_hand -= quantity
         source.quantity_available = source.quantity_on_hand - source.quantity_reserved
-        source.save(update_fields=["quantity_on_hand", "quantity_available"])
+        source.updated_by = actor
+        source.save(update_fields=["quantity_on_hand", "quantity_available", "updated_by"])
 
         # Update target quantities
         target.quantity_on_hand += quantity
         target.quantity_available = target.quantity_on_hand - target.quantity_reserved
-        target.save(update_fields=["quantity_on_hand", "quantity_available"])
+        target.updated_by = actor
+        target.save(update_fields=["quantity_on_hand", "quantity_available", "updated_by"])
 
         # Create paired movements
         movement_out = StockMovement.objects.create(
@@ -173,7 +177,7 @@ class StockTransferService:
             target_entity_id=str(source.pk),
             actor_user=actor,
             company=company,
-            before_snapshot=None,
+            before_snapshot=before_source,
             after_snapshot=snapshot(source),
             metadata={
                 "source_stock_item_id": str(source.pk),
@@ -232,6 +236,15 @@ class StockTransferService:
                 "Source and target warehouses must be different",
                 field="target_warehouse_id",
             )
+
+        # Fix 2: Validate quantity_available against requested count
+        requested_count = len(serial_unit_ids)
+        if source.quantity_available < requested_count:
+            raise StockValidationError(
+                "Insufficient available stock for transfer", field="serial_unit_ids",
+            )
+
+        before_source = snapshot(source)
 
         # Race-safe find-or-create target stock item
         target = _get_or_create_target_stock_item(company, source, target_warehouse, actor)
@@ -300,14 +313,16 @@ class StockTransferService:
             movement_ids.extend([str(movement_out.pk), str(movement_in.pk)])
 
         # Update source quantities
-        source.quantity_on_hand -= len(serial_unit_ids)
+        source.quantity_on_hand -= requested_count
         source.quantity_available = source.quantity_on_hand - source.quantity_reserved
-        source.save(update_fields=["quantity_on_hand", "quantity_available"])
+        source.updated_by = actor
+        source.save(update_fields=["quantity_on_hand", "quantity_available", "updated_by"])
 
         # Update target quantities
-        target.quantity_on_hand += len(serial_unit_ids)
+        target.quantity_on_hand += requested_count
         target.quantity_available = target.quantity_on_hand - target.quantity_reserved
-        target.save(update_fields=["quantity_on_hand", "quantity_available"])
+        target.updated_by = actor
+        target.save(update_fields=["quantity_on_hand", "quantity_available", "updated_by"])
 
         AuditService.log_event(
             action_code="stock.transfer.serialized",
@@ -315,7 +330,7 @@ class StockTransferService:
             target_entity_id=str(source.pk),
             actor_user=actor,
             company=company,
-            before_snapshot=None,
+            before_snapshot=before_source,
             after_snapshot=snapshot(source),
             metadata={
                 "source_stock_item_id": str(source.pk),
@@ -323,7 +338,7 @@ class StockTransferService:
                 "target_warehouse_id": str(target_warehouse.pk),
                 "serial_unit_ids": [str(uid) for uid in serial_unit_ids],
                 "movement_ids": movement_ids,
-                "units_transferred": len(serial_unit_ids),
+                "units_transferred": requested_count,
             },
         )
 

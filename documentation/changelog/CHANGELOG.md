@@ -8,6 +8,20 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Replaced hardcoded "core.User" with settings.AUTH_USER_MODEL
   in audit/models/log.py
 
+## [0.5.1] - 2026-04-03
+### Fixed
+- Serialized issue now validates quantity_available >= requested count before
+  processing units — prevents bypassing reserved quantity semantics
+- Serialized transfer now validates source quantity_available >= requested count
+  before processing units — prevents bypassing reserved quantity semantics
+- Serialized receive now wraps StockSerialUnit.objects.create() with IntegrityError
+  catch — concurrent serial_number/asset_tag race converts to clean StockConflictError
+  instead of leaking raw DB IntegrityError
+- All stock mutation operations now capture before_snapshot (locked state) and
+  after_snapshot for enterprise-grade audit traceability
+- All stock mutation operations now set updated_by=actor on mutated StockItem rows
+- No model changes, no migration changes
+
 ## [0.5.0] - 2026-04-03
 ### Added
 - Stock Service Layer Part 2: Core Stock Operations

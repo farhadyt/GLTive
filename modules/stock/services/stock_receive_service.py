@@ -3,7 +3,7 @@
 Stock Receive Service
 Handles receiving quantity-based and serialized stock into inventory.
 """
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.utils import timezone
 
 from audit.services.logger import AuditService
@@ -60,13 +60,15 @@ class StockReceiveService:
             )
 
         now = timezone.now()
+        before = snapshot(stock_item)
 
         # Update quantities
         stock_item.quantity_on_hand += quantity
         stock_item.quantity_available = stock_item.quantity_on_hand - stock_item.quantity_reserved
         stock_item.last_received_at = now
+        stock_item.updated_by = actor
         stock_item.save(update_fields=[
-            "quantity_on_hand", "quantity_available", "last_received_at",
+            "quantity_on_hand", "quantity_available", "last_received_at", "updated_by",
         ])
 
         # Create immutable movement record
@@ -93,7 +95,7 @@ class StockReceiveService:
             target_entity_id=str(stock_item.pk),
             actor_user=actor,
             company=company,
-            before_snapshot=None,
+            before_snapshot=before,
             after_snapshot=snapshot(stock_item),
             metadata={"movement_id": str(movement.pk), "quantity": str(quantity)},
         )
@@ -140,6 +142,7 @@ class StockReceiveService:
             )
 
         now = timezone.now()
+        before = snapshot(stock_item)
         serial_unit_ids = []
         movement_ids = []
 
@@ -151,7 +154,7 @@ class StockReceiveService:
                     field="serial_number",
                 )
 
-            # Serial uniqueness: condition=Q(is_deleted=False)
+            # Serial uniqueness pre-check: condition=Q(is_deleted=False)
             if StockSerialUnit.objects.filter(
                 company=company, serial_number=serial_number,
                 is_deleted=False,
@@ -160,7 +163,7 @@ class StockReceiveService:
                     f"Serial number '{serial_number}' already exists in this company"
                 )
 
-            # Asset tag uniqueness: condition=Q(is_deleted=False, asset_tag_candidate__isnull=False)
+            # Asset tag uniqueness pre-check: condition=Q(is_deleted=False, asset_tag_candidate__isnull=False)
             asset_tag = unit_data.get("asset_tag_candidate")
             if asset_tag:
                 if StockSerialUnit.objects.filter(
@@ -171,20 +174,28 @@ class StockReceiveService:
                         f"Asset tag '{asset_tag}' already exists in this company"
                     )
 
-            serial_unit = StockSerialUnit.objects.create(
-                company=company,
-                stock_item=stock_item,
-                warehouse=stock_item.warehouse,
-                serial_number=serial_number,
-                asset_tag_candidate=asset_tag or None,
-                condition_status=unit_data.get("condition_status", StockSerialUnit.CONDITION_NEW),
-                stock_status=StockSerialUnit.STATUS_IN_STOCK,
-                received_at=now,
-                notes=unit_data.get("note", ""),
-                is_active=True,
-                created_by=actor,
-                updated_by=actor,
-            )
+            # Create with IntegrityError race protection
+            try:
+                serial_unit = StockSerialUnit.objects.create(
+                    company=company,
+                    stock_item=stock_item,
+                    warehouse=stock_item.warehouse,
+                    serial_number=serial_number,
+                    asset_tag_candidate=asset_tag or None,
+                    condition_status=unit_data.get("condition_status", StockSerialUnit.CONDITION_NEW),
+                    stock_status=StockSerialUnit.STATUS_IN_STOCK,
+                    received_at=now,
+                    notes=unit_data.get("note", ""),
+                    is_active=True,
+                    created_by=actor,
+                    updated_by=actor,
+                )
+            except IntegrityError:
+                raise StockConflictError(
+                    f"A serial unit with serial number '{serial_number}' or asset tag "
+                    f"'{asset_tag or ''}' was created concurrently"
+                )
+
             serial_unit_ids.append(str(serial_unit.pk))
 
             movement = StockMovement.objects.create(
@@ -209,8 +220,9 @@ class StockReceiveService:
         stock_item.quantity_on_hand += len(units)
         stock_item.quantity_available = stock_item.quantity_on_hand - stock_item.quantity_reserved
         stock_item.last_received_at = now
+        stock_item.updated_by = actor
         stock_item.save(update_fields=[
-            "quantity_on_hand", "quantity_available", "last_received_at",
+            "quantity_on_hand", "quantity_available", "last_received_at", "updated_by",
         ])
 
         AuditService.log_event(
@@ -219,7 +231,7 @@ class StockReceiveService:
             target_entity_id=str(stock_item.pk),
             actor_user=actor,
             company=company,
-            before_snapshot=None,
+            before_snapshot=before,
             after_snapshot=snapshot(stock_item),
             metadata={
                 "serial_unit_ids": serial_unit_ids,

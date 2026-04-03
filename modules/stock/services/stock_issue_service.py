@@ -59,13 +59,15 @@ class StockIssueService:
             raise StockValidationError("Insufficient stock", field="quantity")
 
         now = timezone.now()
+        before = snapshot(stock_item)
 
         # Update quantities
         stock_item.quantity_on_hand -= quantity
         stock_item.quantity_available = stock_item.quantity_on_hand - stock_item.quantity_reserved
         stock_item.last_issued_at = now
+        stock_item.updated_by = actor
         stock_item.save(update_fields=[
-            "quantity_on_hand", "quantity_available", "last_issued_at",
+            "quantity_on_hand", "quantity_available", "last_issued_at", "updated_by",
         ])
 
         # Create immutable movement record
@@ -92,7 +94,7 @@ class StockIssueService:
             target_entity_id=str(stock_item.pk),
             actor_user=actor,
             company=company,
-            before_snapshot=None,
+            before_snapshot=before,
             after_snapshot=snapshot(stock_item),
             metadata={"movement_id": str(movement.pk), "quantity": str(quantity)},
         )
@@ -136,7 +138,13 @@ class StockIssueService:
                 field="warehouse",
             )
 
+        # Fix 1: Validate quantity_available against requested count
+        requested_count = len(serial_unit_ids)
+        if stock_item.quantity_available < requested_count:
+            raise StockValidationError("Insufficient available stock", field="serial_unit_ids")
+
         now = timezone.now()
+        before = snapshot(stock_item)
         movement_ids = []
 
         for unit_id in serial_unit_ids:
@@ -179,11 +187,12 @@ class StockIssueService:
             movement_ids.append(str(movement.pk))
 
         # Update stock item quantities
-        stock_item.quantity_on_hand -= len(serial_unit_ids)
+        stock_item.quantity_on_hand -= requested_count
         stock_item.quantity_available = stock_item.quantity_on_hand - stock_item.quantity_reserved
         stock_item.last_issued_at = now
+        stock_item.updated_by = actor
         stock_item.save(update_fields=[
-            "quantity_on_hand", "quantity_available", "last_issued_at",
+            "quantity_on_hand", "quantity_available", "last_issued_at", "updated_by",
         ])
 
         AuditService.log_event(
@@ -192,12 +201,12 @@ class StockIssueService:
             target_entity_id=str(stock_item.pk),
             actor_user=actor,
             company=company,
-            before_snapshot=None,
+            before_snapshot=before,
             after_snapshot=snapshot(stock_item),
             metadata={
                 "serial_unit_ids": [str(uid) for uid in serial_unit_ids],
                 "movement_ids": movement_ids,
-                "units_issued": len(serial_unit_ids),
+                "units_issued": requested_count,
             },
         )
 
