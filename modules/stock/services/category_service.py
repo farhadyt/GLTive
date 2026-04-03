@@ -3,8 +3,6 @@
 Category Service
 Company-scoped CRUD and deactivation logic for stock categories.
 """
-from django.db import transaction
-
 from audit.services.logger import AuditService
 from modules.stock.models.category import StockCategory
 from modules.stock.models.item_model import ItemModel

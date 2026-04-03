@@ -8,6 +8,23 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Replaced hardcoded "core.User" with settings.AUTH_USER_MODEL
   in audit/models/log.py
 
+## [0.5.0] - 2026-04-03
+### Added
+- Stock Service Layer Part 2: Core Stock Operations
+  - StockItemService: create, update, deactivate, recalculate_available_quantity
+  - StockReceiveService: receive_quantity_stock, receive_serialized_stock
+  - StockIssueService: issue_quantity_stock, issue_serialized_stock
+  - StockTransferService: transfer_quantity_stock, transfer_serialized_stock
+- All quantity/state mutations use transaction.atomic + select_for_update
+- Immutable StockMovement records created via .objects.create() only
+- StockSerialUnit lifecycle: in_stock on receive, issued on issue, warehouse reassignment on transfer
+- Paired transfer_out/transfer_in movements for warehouse transfers
+- Race-safe target StockItem find-or-create in transfer flows (IntegrityError catch + re-fetch)
+- All duplicate checks aligned with DB UniqueConstraint conditions (is_deleted=False)
+- Audit trail via AuditService.log_event for all state changes
+### Fixed
+- Removed unused `from django.db import transaction` in category_service.py (Part 1 cleanup)
+
 ## [0.4.1] - 2026-04-03
 ### Fixed
 - Aligned all service-level duplicate checks with actual DB UniqueConstraint
