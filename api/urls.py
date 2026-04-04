@@ -13,4 +13,5 @@ from django.urls import include, path
 urlpatterns = [
     # API v1 namespace — module routes will be added here
     path("v1/auth/", include("core.auth.urls")),
+    path("v1/stock/", include("modules.stock.api.urls")),
 ]

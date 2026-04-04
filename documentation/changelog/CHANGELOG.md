@@ -8,6 +8,27 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Replaced hardcoded "core.User" with settings.AUTH_USER_MODEL
   in audit/models/log.py
 
+## [0.7.0] - 2026-04-04
+### Added
+- Stock Exception Mapping: StockValidationError→400, StockNotFoundError→404,
+  StockConflictError→409, StockDeactivationBlockedError→409
+- Stock API Layer: 40+ endpoints covering all stock operations
+- Master Data CRUD APIs: Categories, Brands, Vendors, ItemModels, Warehouses, StockItems
+- Stock Command APIs: Receive, Issue, Transfer (quantity + serialized)
+- Adjustment APIs: create session, upsert lines, confirm, cancel
+- Alert APIs: list, acknowledge, resolve
+- Dashboard APIs: summary, recent movements, low stock items
+- Movement History API: read-only list and detail
+- Lookup APIs: 6 lightweight dropdown endpoints
+- Permission enforcement on every endpoint with granular stock permission codes
+- Alert evaluation automatically triggered after all stock-changing operations
+- Company-scoped tenant isolation on every queryset and every write operation
+
+### Changed
+- Updated shared exception handler to catch stock domain exceptions
+- Registered stock API routes under /api/v1/stock/
+- Updated stock module documentation to reflect API implementation
+
 ## [0.6.0] - 2026-04-04
 ### Added
 - Stock Service Layer Part 3: Adjustment, Alert, and Dashboard Services

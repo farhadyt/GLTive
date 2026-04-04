@@ -3,7 +3,46 @@
 GLTive Exception Handler
 Produces error responses matching the platform's API error contract.
 """
+from rest_framework import status as http_status
+from rest_framework.response import Response
 from rest_framework.views import exception_handler
+
+from modules.stock.services.exceptions import (
+    StockServiceError,
+    StockNotFoundError,
+    StockValidationError,
+    StockConflictError,
+    StockDeactivationBlockedError,
+)
+
+
+# Mapping of stock domain exceptions to HTTP status codes
+_STOCK_EXCEPTION_MAP = {
+    StockNotFoundError: http_status.HTTP_404_NOT_FOUND,
+    StockValidationError: http_status.HTTP_400_BAD_REQUEST,
+    StockConflictError: http_status.HTTP_409_CONFLICT,
+    StockDeactivationBlockedError: http_status.HTTP_409_CONFLICT,
+}
+
+
+def _build_stock_error_response(exc, status_code):
+    """Build the platform error envelope for a stock domain exception."""
+    field_errors = {}
+    if isinstance(exc, StockValidationError) and exc.field:
+        field_errors[exc.field] = [exc.message]
+
+    return Response(
+        {
+            "success": False,
+            "error": {
+                "code": exc.code,
+                "message": exc.message,
+                "details": exc.details,
+                "field_errors": field_errors,
+            },
+        },
+        status=status_code,
+    )
 
 
 def gltive_exception_handler(exc, context):
@@ -21,6 +60,13 @@ def gltive_exception_handler(exc, context):
         }
     }
     """
+    # Stock domain exceptions — catch BEFORE DRF handler
+    if isinstance(exc, StockServiceError):
+        status_code = _STOCK_EXCEPTION_MAP.get(
+            type(exc), http_status.HTTP_400_BAD_REQUEST
+        )
+        return _build_stock_error_response(exc, status_code)
+
     response = exception_handler(exc, context)
 
     if response is None:
