@@ -2,6 +2,10 @@ import { apiClient } from "@/shared/lib/api-client";
 import type { ApiResponse, PaginatedData } from "@/shared/types/api";
 import type {
   Category,
+  Brand,
+  Vendor,
+  Warehouse,
+  ItemModel,
   StockItem,
   Movement,
   DashboardSummary,
@@ -59,6 +63,99 @@ export async function updateCategory(id: string, data: Partial<{ code: string; n
     `/api/v1/stock/categories/${id}/`,
     data
   );
+  return res.data.data;
+}
+
+// ─── Brands ───
+export async function fetchBrands(page = 1, pageSize = 20) {
+  const res = await apiClient.get<ApiResponse<PaginatedData<Brand>>>(
+    "/api/v1/stock/brands/",
+    { params: { page, page_size: pageSize } }
+  );
+  return res.data.data;
+}
+
+export async function createBrand(data: { name: string; description?: string; website?: string }) {
+  const res = await apiClient.post<ApiResponse<Brand>>("/api/v1/stock/brands/", data);
+  return res.data.data;
+}
+
+export async function updateBrand(id: string, data: Partial<{ name: string; description: string; website: string }>) {
+  const res = await apiClient.patch<ApiResponse<Brand>>(`/api/v1/stock/brands/${id}/`, data);
+  return res.data.data;
+}
+
+// ─── Vendors ───
+export async function fetchVendors(page = 1, pageSize = 20) {
+  const res = await apiClient.get<ApiResponse<PaginatedData<Vendor>>>(
+    "/api/v1/stock/vendors/",
+    { params: { page, page_size: pageSize } }
+  );
+  return res.data.data;
+}
+
+export async function createVendor(data: { name: string; code?: string; contact_person?: string; email?: string; phone?: string; address?: string; notes?: string }) {
+  const res = await apiClient.post<ApiResponse<Vendor>>("/api/v1/stock/vendors/", data);
+  return res.data.data;
+}
+
+export async function updateVendor(id: string, data: Partial<{ name: string; code: string; contact_person: string; email: string; phone: string; address: string; notes: string }>) {
+  const res = await apiClient.patch<ApiResponse<Vendor>>(`/api/v1/stock/vendors/${id}/`, data);
+  return res.data.data;
+}
+
+// ─── Warehouses ───
+export async function fetchWarehouses(page = 1, pageSize = 20) {
+  const res = await apiClient.get<ApiResponse<PaginatedData<Warehouse>>>(
+    "/api/v1/stock/warehouses/",
+    { params: { page, page_size: pageSize } }
+  );
+  return res.data.data;
+}
+
+export async function createWarehouse(data: { code: string; name: string; description?: string }) {
+  const res = await apiClient.post<ApiResponse<Warehouse>>("/api/v1/stock/warehouses/", data);
+  return res.data.data;
+}
+
+export async function updateWarehouse(id: string, data: Partial<{ code: string; name: string; description: string }>) {
+  const res = await apiClient.patch<ApiResponse<Warehouse>>(`/api/v1/stock/warehouses/${id}/`, data);
+  return res.data.data;
+}
+
+// ─── Item Models ───
+export async function fetchItemModels(page = 1, pageSize = 20) {
+  const res = await apiClient.get<ApiResponse<PaginatedData<ItemModel>>>(
+    "/api/v1/stock/item-models/",
+    { params: { page, page_size: pageSize } }
+  );
+  return res.data.data;
+}
+
+export async function createItemModel(data: {
+  category_id: string;
+  model_name: string;
+  tracking_type: string;
+  brand_id?: string;
+  vendor_reference_id?: string;
+  model_code?: string;
+  description?: string;
+  default_unit?: string;
+}) {
+  const res = await apiClient.post<ApiResponse<ItemModel>>("/api/v1/stock/item-models/", data);
+  return res.data.data;
+}
+
+export async function updateItemModel(id: string, data: Partial<{
+  model_name: string;
+  model_code: string;
+  category_id: string;
+  brand_id: string | null;
+  vendor_reference_id: string | null;
+  description: string;
+  default_unit: string;
+}>) {
+  const res = await apiClient.patch<ApiResponse<ItemModel>>(`/api/v1/stock/item-models/${id}/`, data);
   return res.data.data;
 }
 

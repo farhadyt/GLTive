@@ -6,6 +6,18 @@ import {
   fetchCategories,
   createCategory,
   updateCategory,
+  fetchBrands,
+  createBrand,
+  updateBrand,
+  fetchVendors,
+  createVendor,
+  updateVendor,
+  fetchWarehouses,
+  createWarehouse,
+  updateWarehouse,
+  fetchItemModels,
+  createItemModel,
+  updateItemModel,
   fetchStockItems,
   fetchMovements,
   fetchLookupItems,
@@ -78,6 +90,102 @@ export function useUpdateCategory() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["stock", "categories"] });
     },
+  });
+}
+
+// ─── Brands ───
+export function useBrands(page = 1) {
+  return useQuery({
+    queryKey: ["stock", "brands", page] as const,
+    queryFn: () => fetchBrands(page),
+  });
+}
+
+export function useCreateBrand() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: createBrand,
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["stock", "brands"] }); },
+  });
+}
+
+export function useUpdateBrand() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof updateBrand>[1] }) => updateBrand(id, data),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["stock", "brands"] }); },
+  });
+}
+
+// ─── Vendors ───
+export function useVendors(page = 1) {
+  return useQuery({
+    queryKey: ["stock", "vendors", page] as const,
+    queryFn: () => fetchVendors(page),
+  });
+}
+
+export function useCreateVendor() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: createVendor,
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["stock", "vendors"] }); },
+  });
+}
+
+export function useUpdateVendor() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof updateVendor>[1] }) => updateVendor(id, data),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["stock", "vendors"] }); },
+  });
+}
+
+// ─── Warehouses ───
+export function useWarehouses(page = 1) {
+  return useQuery({
+    queryKey: ["stock", "warehouses", page] as const,
+    queryFn: () => fetchWarehouses(page),
+  });
+}
+
+export function useCreateWarehouse() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: createWarehouse,
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["stock", "warehouses"] }); },
+  });
+}
+
+export function useUpdateWarehouse() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof updateWarehouse>[1] }) => updateWarehouse(id, data),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["stock", "warehouses"] }); },
+  });
+}
+
+// ─── Item Models ───
+export function useItemModels(page = 1) {
+  return useQuery({
+    queryKey: ["stock", "item-models", page] as const,
+    queryFn: () => fetchItemModels(page),
+  });
+}
+
+export function useCreateItemModel() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: createItemModel,
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["stock", "item-models"] }); },
+  });
+}
+
+export function useUpdateItemModel() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof updateItemModel>[1] }) => updateItemModel(id, data),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["stock", "item-models"] }); },
   });
 }
 

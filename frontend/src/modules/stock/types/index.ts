@@ -10,6 +10,58 @@ export interface Category {
   updated_at: string;
 }
 
+export interface Brand {
+  id: string;
+  name: string;
+  description: string;
+  website: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Vendor {
+  id: string;
+  name: string;
+  code: string | null;
+  contact_person: string;
+  email: string;
+  phone: string;
+  address: string;
+  notes: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Warehouse {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  is_default: boolean;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ItemModel {
+  id: string;
+  category_id: string;
+  brand_id: string | null;
+  vendor_reference_id: string | null;
+  model_name: string;
+  model_code: string | null;
+  description: string;
+  default_unit: string;
+  tracking_type: "quantity_based" | "serialized";
+  minimum_stock_level: string | null;
+  image_url: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface StockItem {
   id: string;
   item_model_id: string;

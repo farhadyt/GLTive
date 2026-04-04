@@ -54,6 +54,26 @@ const AdjustmentsPage = lazy(() =>
     default: m.AdjustmentsPage,
   }))
 );
+const BrandsPage = lazy(() =>
+  import("@/modules/stock/pages/BrandsPage").then((m) => ({
+    default: m.BrandsPage,
+  }))
+);
+const VendorsPage = lazy(() =>
+  import("@/modules/stock/pages/VendorsPage").then((m) => ({
+    default: m.VendorsPage,
+  }))
+);
+const WarehousesPage = lazy(() =>
+  import("@/modules/stock/pages/WarehousesPage").then((m) => ({
+    default: m.WarehousesPage,
+  }))
+);
+const ItemModelsPage = lazy(() =>
+  import("@/modules/stock/pages/ItemModelsPage").then((m) => ({
+    default: m.ItemModelsPage,
+  }))
+);
 
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -107,6 +127,38 @@ export const router = createBrowserRouter([
                 element: (
                   <SuspenseWrapper>
                     <CategoriesPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: "/stock/brands",
+                element: (
+                  <SuspenseWrapper>
+                    <BrandsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: "/stock/vendors",
+                element: (
+                  <SuspenseWrapper>
+                    <VendorsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: "/stock/warehouses",
+                element: (
+                  <SuspenseWrapper>
+                    <WarehousesPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: "/stock/item-models",
+                element: (
+                  <SuspenseWrapper>
+                    <ItemModelsPage />
                   </SuspenseWrapper>
                 ),
               },
