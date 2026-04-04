@@ -3,96 +3,51 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* Primary */
-  --color-primary-50: #eef2ff;
-  --color-primary-100: #e0e7ff;
-  --color-primary-200: #c7d2fe;
-  --color-primary-300: #a5b4fc;
-  --color-primary-400: #818cf8;
-  --color-primary-500: #6366f1;
-  --color-primary-600: #4f46e5;
-  --color-primary-700: #4338ca;
-  --color-primary-800: #3730a3;
-  --color-primary-900: #312e81;
+  /* Stitch "Industrial Architect" Design System */
 
-  /* Neutral */
-  --color-neutral-50: #f8fafc;
-  --color-neutral-100: #f1f5f9;
-  --color-neutral-200: #e2e8f0;
-  --color-neutral-300: #cbd5e1;
-  --color-neutral-400: #94a3b8;
-  --color-neutral-500: #64748b;
-  --color-neutral-600: #475569;
-  --color-neutral-700: #334155;
-  --color-neutral-800: #1e293b;
-  --color-neutral-900: #0f172a;
-  --color-neutral-950: #020617;
+  /* Primary — Indigo */
+  --color-primary: #c0c1ff;
+  --color-primary-container: #8083ff;
+  --color-on-primary: #1000a9;
+  --color-on-primary-container: #0d0096;
 
-  /* Success */
-  --color-success-500: #22c55e;
-  --color-success-600: #16a34a;
+  /* Secondary — Cyan */
+  --color-secondary: #5de6ff;
+  --color-secondary-dim: #2fd9f4;
+  --color-on-secondary: #00363e;
+  --color-on-secondary-container: #00515d;
+  --color-secondary-container: #00cbe6;
 
-  /* Warning */
-  --color-warning-500: #f59e0b;
-  --color-warning-600: #d97706;
+  /* Error/Danger */
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error: #690005;
 
-  /* Danger */
-  --color-danger-500: #ef4444;
-  --color-danger-600: #dc2626;
+  /* Surfaces — Tonal depth layers */
+  --surface: #0b1326;
+  --surface-dim: #0b1326;
+  --surface-container-lowest: #060e20;
+  --surface-container-low: #131b2e;
+  --surface-container: #171f33;
+  --surface-container-high: #222a3d;
+  --surface-container-highest: #2d3449;
+  --surface-bright: #31394d;
 
-  /* Info */
-  --color-info-500: #3b82f6;
-  --color-info-600: #2563eb;
+  /* Text */
+  --color-on-surface: #dae2fd;
+  --color-on-surface-variant: #c7c4d7;
+  --color-outline: #908fa0;
+  --color-outline-variant: #464554;
 
-  /* Surfaces — Light */
-  --surface-bg: var(--color-neutral-50);
-  --surface-card: #ffffff;
-  --surface-elevated: #ffffff;
-  --surface-sidebar: #ffffff;
-  --surface-overlay: rgba(0, 0, 0, 0.5);
-
-  /* Text — Light */
-  --text-primary: var(--color-neutral-900);
-  --text-secondary: var(--color-neutral-600);
-  --text-muted: var(--color-neutral-400);
-  --text-inverse: #ffffff;
-
-  /* Border — Light */
-  --border-default: var(--color-neutral-200);
-  --border-strong: var(--color-neutral-300);
-  --border-subtle: var(--color-neutral-100);
+  /* Inverse */
+  --color-inverse-surface: #dae2fd;
+  --color-inverse-on-surface: #283044;
 
   /* Radius */
   --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
   --radius-xl: 0.75rem;
-
-  /* Shadow */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-.dark {
-  --surface-bg: var(--color-neutral-950);
-  --surface-card: var(--color-neutral-900);
-  --surface-elevated: var(--color-neutral-800);
-  --surface-sidebar: var(--color-neutral-900);
-  --surface-overlay: rgba(0, 0, 0, 0.7);
-
-  --text-primary: var(--color-neutral-50);
-  --text-secondary: var(--color-neutral-400);
-  --text-muted: var(--color-neutral-500);
-  --text-inverse: var(--color-neutral-900);
-
-  --border-default: var(--color-neutral-700);
-  --border-strong: var(--color-neutral-600);
-  --border-subtle: var(--color-neutral-800);
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
 }
 
 html {
@@ -100,7 +55,32 @@ html {
 }
 
 body {
-  background-color: var(--surface-bg);
-  color: var(--text-primary);
-  transition: background-color 0.2s, color 0.2s;
+  background-color: var(--surface);
+  color: var(--color-on-surface);
+}
+
+/* No-scrollbar utility */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Gradient primary button */
+.btn-primary-gradient {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+  color: var(--color-on-primary-container);
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(23, 31, 51, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Pulse animation for live indicators */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
 }
