@@ -19,7 +19,7 @@ if not SECRET_KEY:  # noqa: F405
         "Generate a strong key (minimum 50 characters) and set it in your environment."
     )
 
-if len(SECRET_KEY) < 32:  # noqa: F405
+if len(SECRET_KEY) < 50:  # noqa: F405
     raise RuntimeError(
         "DJANGO_SECRET_KEY is too short for production. "
         "Use at least 50 characters for cryptographic safety."

@@ -92,7 +92,7 @@ gunicorn config.wsgi:application --bind 0.0.0.0:8000
 
 ### Security Notes
 
-- Production startup will **fail** if `DJANGO_SECRET_KEY` is missing or shorter than 32 characters
+- Production startup will **fail** if `DJANGO_SECRET_KEY` is missing or shorter than 50 characters
 - JWT signing uses Django's `SECRET_KEY` — a strong key ensures strong JWT tokens
 - CORS is strict by default — no wildcard origins allowed
 - SSL redirect is enabled by default — disable only behind a reverse proxy that handles SSL

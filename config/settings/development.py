@@ -11,7 +11,7 @@ DEBUG = True
 # Development secret fallback — safe ONLY for local development
 # ---------------------
 if not SECRET_KEY:  # noqa: F405
-    SECRET_KEY = "django-insecure-dev-only-do-not-use-in-production"  # noqa: F811
+    SECRET_KEY = "django-insecure-dev-only-do-not-use-in-production-key-min-50-chars!"  # noqa: F811
 
 # ---------------------
 # Debug toolbar
