@@ -7,13 +7,32 @@ const apiClient = axios.create({
 });
 
 let accessToken: string | null = null;
+let refreshToken: string | null = null;
+let logoutCallback: (() => void) | null = null;
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (token: string) => void;
+  reject: (error: unknown) => void;
+}> = [];
 
 export function setAccessToken(token: string | null) {
   accessToken = token;
 }
 
-export function getAccessToken(): string | null {
-  return accessToken;
+export function setRefreshToken(token: string | null) {
+  refreshToken = token;
+}
+
+export function setLogoutCallback(cb: (() => void) | null) {
+  logoutCallback = cb;
+}
+
+function processQueue(error: unknown, token: string | null) {
+  failedQueue.forEach((p) => {
+    if (token) p.resolve(token);
+    else p.reject(error);
+  });
+  failedQueue = [];
 }
 
 apiClient.interceptors.request.use((config) => {
@@ -25,7 +44,58 @@ apiClient.interceptors.request.use((config) => {
 
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    const originalRequest = error.config;
+
+    // 401 handling with refresh attempt
+    if (
+      axios.isAxiosError(error) &&
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      refreshToken
+    ) {
+      if (isRefreshing) {
+        // Queue requests while refreshing
+        return new Promise((resolve, reject) => {
+          failedQueue.push({
+            resolve: (token: string) => {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+              resolve(apiClient(originalRequest));
+            },
+            reject,
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const res = await axios.post(
+          `${apiClient.defaults.baseURL}/api/v1/auth/refresh/`,
+          { refresh: refreshToken },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        const newAccess = res.data?.data?.access;
+        if (newAccess) {
+          setAccessToken(newAccess);
+          processQueue(null, newAccess);
+          originalRequest.headers.Authorization = `Bearer ${newAccess}`;
+          return apiClient(originalRequest);
+        }
+      } catch {
+        processQueue(error, null);
+        // Refresh failed — force logout
+        setAccessToken(null);
+        setRefreshToken(null);
+        if (logoutCallback) logoutCallback();
+        return Promise.reject(error);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    // Normalize error response
     if (axios.isAxiosError(error) && error.response) {
       const data = error.response.data as ApiError;
       const message =

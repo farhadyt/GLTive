@@ -8,6 +8,20 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Replaced hardcoded "core.User" with settings.AUTH_USER_MODEL
   in audit/models/log.py
 
+## [0.8.1] - 2026-04-04
+### Fixed
+- Stock routes now protected with PermissionGuard (was AuthGuard-only)
+- API client: added 401 interceptor with silent token refresh and queued retry
+- API client: refresh failure triggers forced logout via callback
+- Auth provider: registers logout callback with API client for 401 recovery
+- Auth session: permissions array honestly empty (backend JWT does not include
+  role permissions — only admin bypass active, documented explicitly)
+- Permission hooks: documented that fine-grained non-admin checks will activate
+  when backend provides permission source
+- frontend/README.md rewritten as GLTive-specific documentation with honest
+  auth model, permission model, and "what is / is not included" sections
+- Design note: visual refinement will be guided by Google Stitch separately
+
 ## [0.8.0] - 2026-04-04
 ### Added
 - GLTive Web UI Foundation (React + TypeScript + Vite + TailwindCSS)

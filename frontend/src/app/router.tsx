@@ -1,10 +1,10 @@
 import { createBrowserRouter, Navigate } from "react-router";
 import { lazy, Suspense } from "react";
-import { AuthGuard, PublicGuard } from "./guards";
+import { AuthGuard, PublicGuard, PermissionGuard } from "./guards";
 import { AppShell } from "@/shared/layouts/AppShell";
 import { Spinner } from "@/shared/ui";
+import { STOCK_PERMISSIONS } from "@/shared/config/permissions";
 
-// Lazy-loaded pages
 const LoginPage = lazy(() =>
   import("./LoginPage").then((m) => ({ default: m.LoginPage }))
 );
@@ -50,6 +50,7 @@ function SuspenseWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export const router = createBrowserRouter([
+  // Public routes
   {
     element: <PublicGuard />,
     children: [
@@ -63,6 +64,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  // Authenticated routes
   {
     element: <AuthGuard />,
     children: [
@@ -70,38 +72,53 @@ export const router = createBrowserRouter([
         element: <AppShell />,
         children: [
           { index: true, element: <Navigate to="/stock" replace /> },
+          // Stock module — permission-guarded
           {
-            path: "/stock",
-            element: (
-              <SuspenseWrapper>
-                <StockDashboardPage />
-              </SuspenseWrapper>
-            ),
+            element: <PermissionGuard permission={STOCK_PERMISSIONS.VIEW} />,
+            children: [
+              {
+                path: "/stock",
+                element: (
+                  <SuspenseWrapper>
+                    <StockDashboardPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: "/stock/categories",
+                element: (
+                  <SuspenseWrapper>
+                    <CategoriesPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: "/stock/items",
+                element: (
+                  <SuspenseWrapper>
+                    <StockItemsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
           },
+          // Movement history — separate permission
           {
-            path: "/stock/categories",
             element: (
-              <SuspenseWrapper>
-                <CategoriesPage />
-              </SuspenseWrapper>
+              <PermissionGuard permission={STOCK_PERMISSIONS.HISTORY_VIEW} />
             ),
+            children: [
+              {
+                path: "/stock/movements",
+                element: (
+                  <SuspenseWrapper>
+                    <MovementsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
           },
-          {
-            path: "/stock/items",
-            element: (
-              <SuspenseWrapper>
-                <StockItemsPage />
-              </SuspenseWrapper>
-            ),
-          },
-          {
-            path: "/stock/movements",
-            element: (
-              <SuspenseWrapper>
-                <MovementsPage />
-              </SuspenseWrapper>
-            ),
-          },
+          // Utility routes
           {
             path: "/403",
             element: (
