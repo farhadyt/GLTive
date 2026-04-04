@@ -21,13 +21,19 @@
     "not_found_desc": "Запрашиваемая страница не существует."
   },
   "auth": {
-    "login": "Войти",
+    "login": "Войти в систему",
     "logout": "Выйти",
-    "username": "Имя пользователя",
-    "password": "Пароль",
-    "login_title": "Вход в GLTive",
-    "login_subtitle": "Платформа ИТ-операций предприятия",
-    "login_error": "Неверное имя пользователя или пароль"
+    "email_label": "Электронная почта",
+    "email_placeholder": "имя@компания.com",
+    "password_label": "Ключ безопасности",
+    "password_placeholder": "••••••••••••",
+    "forgot_password": "Забыли пароль?",
+    "remember": "Запомнить этот терминал",
+    "login_title": "GLTive Stock",
+    "login_subtitle": "Управление складскими запасами",
+    "login_error": "Неверные данные. Попробуйте снова.",
+    "engine_status": "Складской движок: Онлайн",
+    "engine_desc": "Отслеживание запасов в реальном времени"
   },
   "nav": {
     "stock": "Склад и Инвентарь",

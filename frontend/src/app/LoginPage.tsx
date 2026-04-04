@@ -18,7 +18,7 @@ const LANGS = ["EN", "AZ", "RU", "TR"] as const;
 const LANG_MAP: Record<string, string> = { EN: "en", AZ: "az", RU: "ru", TR: "tr" };
 
 export function LoginPage() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { login, isLoading } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -36,7 +36,7 @@ export function LoginPage() {
       await login(email, password);
       navigate("/", { replace: true });
     } catch {
-      setError("Invalid credentials. Please try again.");
+      setError(t("auth.login_error"));
     }
   }
 
@@ -65,11 +65,11 @@ export function LoginPage() {
               <Warehouse className="w-7 h-7 text-[#0d0096]" />
             </div>
             <h1 className="text-2xl font-black tracking-tighter bg-gradient-to-br from-white to-[#c0c1ff] bg-clip-text text-transparent uppercase">
-              GLTive Stock
+              {t("auth.login_title")}
             </h1>
           </div>
           <p className="text-[#908fa0] font-medium tracking-widest text-[0.6875rem] uppercase">
-            Enterprise Stock Management
+            {t("auth.login_subtitle")}
           </p>
         </div>
 
@@ -85,7 +85,7 @@ export function LoginPage() {
                 className="text-xs font-semibold text-[#c7c4d7] uppercase tracking-wider block"
                 htmlFor="email"
               >
-                Email Address
+                {t("auth.email_label")}
               </label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -100,9 +100,8 @@ export function LoginPage() {
                   autoFocus
                   required
                   className="block w-full bg-[#060e20] border-0 rounded-xl py-3.5 pl-11 pr-4 text-[#dae2fd] placeholder:text-[#908fa0]/50 focus:ring-2 focus:ring-[#c0c1ff]/50 transition-all text-sm"
-                  placeholder="name@enterprise.com"
+                  placeholder={t("auth.email_placeholder")}
                 />
-                {/* Bottom accent line on focus */}
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#c0c1ff] scale-x-0 group-focus-within:scale-x-100 transition-transform origin-left rounded-full" />
               </div>
             </div>
@@ -114,13 +113,13 @@ export function LoginPage() {
                   className="text-xs font-semibold text-[#c7c4d7] uppercase tracking-wider block"
                   htmlFor="password"
                 >
-                  Security Key
+                  {t("auth.password_label")}
                 </label>
                 <a
                   href="#"
                   className="text-[0.6875rem] font-bold text-[#c0c1ff] hover:text-[#e1e0ff] transition-colors uppercase tracking-tight"
                 >
-                  Forgot password?
+                  {t("auth.forgot_password")}
                 </a>
               </div>
               <div className="relative group">
@@ -135,7 +134,7 @@ export function LoginPage() {
                   autoComplete="current-password"
                   required
                   className="block w-full bg-[#060e20] border-0 rounded-xl py-3.5 pl-11 pr-12 text-[#dae2fd] placeholder:text-[#908fa0]/50 focus:ring-2 focus:ring-[#c0c1ff]/50 transition-all text-sm"
-                  placeholder="••••••••••••"
+                  placeholder={t("auth.password_placeholder")}
                 />
                 <button
                   type="button"
@@ -148,7 +147,6 @@ export function LoginPage() {
                     <Eye className="w-5 h-5" />
                   )}
                 </button>
-                {/* Bottom accent line on focus */}
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#c0c1ff] scale-x-0 group-focus-within:scale-x-100 transition-transform origin-left rounded-full" />
               </div>
             </div>
@@ -169,7 +167,7 @@ export function LoginPage() {
                   htmlFor="remember"
                   className="font-medium text-[#c7c4d7] select-none cursor-pointer"
                 >
-                  Remember this terminal
+                  {t("auth.remember")}
                 </label>
               </div>
             </div>
@@ -191,7 +189,7 @@ export function LoginPage() {
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  Access Platform
+                  {t("auth.login")}
                   <ChevronRight className="w-5 h-5" />
                 </>
               )}
@@ -203,6 +201,7 @@ export function LoginPage() {
             {LANGS.map((lang) => (
               <button
                 key={lang}
+                type="button"
                 onClick={() => changeLanguage(LANG_MAP[lang])}
                 className={`text-[0.6875rem] font-bold tracking-tighter uppercase transition-colors ${
                   activeLang === lang
@@ -222,23 +221,16 @@ export function LoginPage() {
             <div className="flex items-center gap-1.5 px-3 py-1 bg-[#00515d] rounded-full">
               <span className="w-1.5 h-1.5 bg-[#5de6ff] rounded-full animate-pulse" />
               <span className="text-[0.625rem] font-bold text-[#5de6ff] uppercase tracking-widest">
-                System Status: Operational
+                {t("auth.engine_status")}
               </span>
             </div>
           </div>
           <div className="flex items-center gap-2 text-[#908fa0]/60 text-[0.75rem] font-medium">
             <ShieldCheck className="w-4 h-4" />
-            Multi-tenant secure access enabled
+            {t("auth.engine_desc")}
           </div>
         </div>
       </main>
-
-      {/* Branding Element / Decorative */}
-      <div className="fixed bottom-8 left-8 hidden lg:block opacity-20 pointer-events-none select-none">
-        <div className="text-[8rem] font-black tracking-tighter leading-none text-white">
-          G L T
-        </div>
-      </div>
     </div>
   );
 }

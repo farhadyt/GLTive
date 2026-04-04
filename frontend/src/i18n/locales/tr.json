@@ -21,13 +21,19 @@
     "not_found_desc": "Aradığınız sayfa mevcut değildir."
   },
   "auth": {
-    "login": "Giriş Yap",
+    "login": "Platforma Giriş",
     "logout": "Çıkış",
-    "username": "Kullanıcı Adı",
-    "password": "Şifre",
-    "login_title": "GLTive'a Giriş",
-    "login_subtitle": "Kurumsal BT Operasyonları Platformu",
-    "login_error": "Geçersiz kullanıcı adı veya şifre"
+    "email_label": "E-posta Adresi",
+    "email_placeholder": "ad@sirket.com",
+    "password_label": "Güvenlik Anahtarı",
+    "password_placeholder": "••••••••••••",
+    "forgot_password": "Şifremi unuttum?",
+    "remember": "Bu terminali hatırla",
+    "login_title": "GLTive Stock",
+    "login_subtitle": "Kurumsal Stok Yönetimi",
+    "login_error": "Geçersiz bilgiler. Tekrar deneyin.",
+    "engine_status": "Envanter Motoru: Çevrimiçi",
+    "engine_desc": "Tüm depolarda gerçek zamanlı stok takibi"
   },
   "nav": {
     "stock": "Stok ve Envanter",

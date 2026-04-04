@@ -21,13 +21,19 @@
     "not_found_desc": "Axtardığınız səhifə mövcud deyil."
   },
   "auth": {
-    "login": "Daxil ol",
+    "login": "Platformaya Daxil Ol",
     "logout": "Çıxış",
-    "username": "İstifadəçi adı",
-    "password": "Şifrə",
-    "login_title": "GLTive-ə daxil olun",
-    "login_subtitle": "Müəssisə İT Əməliyyatları Platforması",
-    "login_error": "Yanlış istifadəçi adı və ya şifrə"
+    "email_label": "E-poçt Ünvanı",
+    "email_placeholder": "ad@sirket.com",
+    "password_label": "Təhlükəsizlik Açarı",
+    "password_placeholder": "••••••••••••",
+    "forgot_password": "Şifrəni unutdunuz?",
+    "remember": "Bu terminalı yadda saxla",
+    "login_title": "GLTive Stock",
+    "login_subtitle": "Müəssisə Stok İdarəetməsi",
+    "login_error": "Yanlış məlumatlar. Yenidən cəhd edin.",
+    "engine_status": "İnventar Mühərriki: Aktiv",
+    "engine_desc": "Bütün anbarlarda real vaxt stok izləməsi"
   },
   "nav": {
     "stock": "Anbar və İnventar",

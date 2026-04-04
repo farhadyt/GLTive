@@ -21,13 +21,19 @@
     "not_found_desc": "The page you are looking for does not exist."
   },
   "auth": {
-    "login": "Sign In",
+    "login": "Access Platform",
     "logout": "Sign Out",
-    "username": "Username",
-    "password": "Password",
-    "login_title": "Sign in to GLTive",
-    "login_subtitle": "Enterprise IT Operations Platform",
-    "login_error": "Invalid username or password"
+    "email_label": "Email Address",
+    "email_placeholder": "name@enterprise.com",
+    "password_label": "Security Key",
+    "password_placeholder": "••••••••••••",
+    "forgot_password": "Forgot Password?",
+    "remember": "Remember this terminal",
+    "login_title": "GLTive Stock",
+    "login_subtitle": "Enterprise Stock Management",
+    "login_error": "Invalid credentials. Please try again.",
+    "engine_status": "Inventory Engine: Online",
+    "engine_desc": "Real-time stock tracking across all warehouses"
   },
   "nav": {
     "stock": "Stock & Inventory",
