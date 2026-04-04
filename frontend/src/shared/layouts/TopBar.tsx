@@ -14,13 +14,18 @@ export function TopBar() {
         <span className="text-lg font-bold tracking-tighter text-white">
           {t("shell.app_title")}
         </span>
+        {session.companyName && (
+          <span className="px-2.5 py-1 rounded-lg bg-[var(--surface-container-highest)] text-xs font-semibold text-[var(--color-on-surface-variant)]">
+            {session.companyName}
+          </span>
+        )}
       </div>
       <div className="flex items-center gap-2">
         <button className="p-2 hover:bg-white/5 transition-all duration-200 rounded-lg text-slate-400">
           <Bell className="w-5 h-5" />
         </button>
         <LanguageDropdown currentLang={i18n.language} />
-        <UserMenu username={session.username} onLogout={logout} t={t} />
+        <UserMenu username={session.username} role={session.role} onLogout={logout} t={t} />
       </div>
     </header>
   );
@@ -74,10 +79,12 @@ function LanguageDropdown({ currentLang }: { currentLang: string }) {
 
 function UserMenu({
   username,
+  role,
   onLogout,
   t,
 }: {
   username: string | null;
+  role: string | null;
   onLogout: () => void;
   t: (key: string) => string;
 }) {
@@ -107,6 +114,7 @@ function UserMenu({
           {username && (
             <div className="px-4 py-3 border-b border-white/5">
               <p className="text-sm font-semibold text-white truncate">{username}</p>
+              {role && <p className="text-[10px] text-[var(--color-outline)] uppercase tracking-wider mt-0.5">{role}</p>}
             </div>
           )}
           <button

@@ -30,7 +30,20 @@
     "active": "Aktif",
     "support": "Destek",
     "out": "Çıkış",
-    "in": "Giriş"
+    "in": "Giriş",
+    "code": "Kod",
+    "description": "Açıklama",
+    "inactive": "Pasif",
+    "all": "Tümü",
+    "type": "Tür",
+    "from": "Kaynak",
+    "to": "Hedef",
+    "by": "Yapan",
+    "date": "Tarih",
+    "serial": "Seri",
+    "qty": "Adet",
+    "tracking": "İzleme",
+    "detail": "Detay"
   },
   "auth": {
     "login": "Platforma Giriş",

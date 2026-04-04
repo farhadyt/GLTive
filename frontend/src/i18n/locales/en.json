@@ -30,7 +30,20 @@
     "active": "Active",
     "support": "Support",
     "out": "Out",
-    "in": "In"
+    "in": "In",
+    "code": "Code",
+    "description": "Description",
+    "inactive": "Inactive",
+    "all": "All",
+    "type": "Type",
+    "from": "From",
+    "to": "To",
+    "by": "By",
+    "date": "Date",
+    "serial": "Serial",
+    "qty": "Qty",
+    "tracking": "Tracking",
+    "detail": "Detail"
   },
   "auth": {
     "login": "Access Platform",

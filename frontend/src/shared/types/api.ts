@@ -34,8 +34,11 @@ export interface UserSession {
   accessToken: string | null;
   refreshToken: string | null;
   companyId: string | null;
+  companyName: string | null;
+  companyCode: string | null;
   isPlatformAdmin: boolean;
   isCompanyAdmin: boolean;
   username: string | null;
+  role: string | null;
   permissions: string[];
 }

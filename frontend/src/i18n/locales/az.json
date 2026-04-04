@@ -30,7 +30,20 @@
     "active": "Aktiv",
     "support": "Dəstək",
     "out": "Çıxış",
-    "in": "Giriş"
+    "in": "Giriş",
+    "code": "Kod",
+    "description": "Təsvir",
+    "inactive": "Deaktiv",
+    "all": "Hamısı",
+    "type": "Növ",
+    "from": "Haradan",
+    "to": "Haraya",
+    "by": "Tərəfindən",
+    "date": "Tarix",
+    "serial": "Seriyalı",
+    "qty": "Miqdar",
+    "tracking": "İzləmə",
+    "detail": "Təfərrüat"
   },
   "auth": {
     "login": "Platformaya Daxil Ol",

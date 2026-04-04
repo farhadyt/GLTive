@@ -50,9 +50,9 @@ export function CategoriesPage() {
               <thead className="text-[10px] text-[var(--color-outline)] uppercase font-black tracking-widest">
                 <tr>
                   <th className="px-6 py-4">{t("common.status")}</th>
-                  <th className="px-6 py-4">Code</th>
+                  <th className="px-6 py-4">{t("common.code")}</th>
                   <th className="px-6 py-4">{t("dashboard.item_name")}</th>
-                  <th className="px-6 py-4">Description</th>
+                  <th className="px-6 py-4">{t("common.description")}</th>
                   <th className="px-6 py-4 text-right">{t("common.actions")}</th>
                 </tr>
               </thead>
@@ -68,7 +68,7 @@ export function CategoriesPage() {
                           ? "bg-[var(--color-on-secondary-container)] text-[var(--color-secondary)]"
                           : "bg-[var(--color-error-container)] text-[var(--color-error)]"
                       }`}>
-                        {cat.is_active ? t("common.active") : "Inactive"}
+                        {cat.is_active ? t("common.active") : t("common.inactive")}
                       </span>
                     </td>
                     <td className="px-6 py-4 font-mono text-[var(--color-primary)]">{cat.code}</td>
@@ -192,7 +192,7 @@ function CategoryModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold text-[var(--color-on-surface-variant)] uppercase tracking-wider">
-              Code
+              {t("common.code")}
             </label>
             <input
               value={code}
@@ -217,7 +217,7 @@ function CategoryModal({
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold text-[var(--color-on-surface-variant)] uppercase tracking-wider">
-              Description
+              {t("common.description")}
             </label>
             <textarea
               value={description}

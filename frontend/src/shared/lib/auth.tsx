@@ -50,9 +50,12 @@ const EMPTY_SESSION: UserSession = {
   accessToken: null,
   refreshToken: null,
   companyId: null,
+  companyName: null,
+  companyCode: null,
   isPlatformAdmin: false,
   isCompanyAdmin: false,
   username: null,
+  role: null,
   permissions: [],
 };
 
@@ -96,9 +99,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         accessToken: access,
         refreshToken: refresh,
         companyId: me.company?.id || null,
+        companyName: me.company?.name || null,
+        companyCode: me.company?.code || null,
         isPlatformAdmin: me.is_platform_admin,
         isCompanyAdmin: me.is_company_admin,
         username: me.username,
+        role: me.role,
         permissions: me.permissions,
       });
     } finally {

@@ -36,8 +36,8 @@ export function StockItemsPage() {
                 <thead className="text-[10px] text-[var(--color-outline)] uppercase font-black tracking-widest">
                   <tr>
                     <th className="px-6 py-4">{t("common.status")}</th>
-                    <th className="px-6 py-4">Code</th>
-                    <th className="px-6 py-4">Tracking</th>
+                    <th className="px-6 py-4">{t("common.code")}</th>
+                    <th className="px-6 py-4">{t("common.tracking")}</th>
                     <th className="px-6 py-4 text-right">{t("common.on_hand")}</th>
                     <th className="px-6 py-4 text-right">{t("common.reserved")}</th>
                     <th className="px-6 py-4 text-right">{t("dashboard.available")}</th>
@@ -62,7 +62,7 @@ export function StockItemsPage() {
                               ? "bg-[var(--color-on-secondary-container)] text-[var(--color-secondary)]"
                               : "bg-[var(--color-error-container)] text-[var(--color-error)]"
                           }`}>
-                            {item.is_active ? t("common.active") : "Inactive"}
+                            {item.is_active ? t("common.active") : t("common.inactive")}
                           </span>
                         </td>
                         <td className="px-6 py-4 font-mono text-[var(--color-primary)]">
@@ -74,7 +74,7 @@ export function StockItemsPage() {
                               ? "bg-[var(--color-primary)]/10 text-[var(--color-primary)]"
                               : "bg-[var(--surface-container-highest)] text-[var(--color-outline)]"
                           }`}>
-                            {item.tracking_type === "serialized" ? "Serial" : "Qty"}
+                            {item.tracking_type === "serialized" ? t("common.serial") : t("common.qty")}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-right font-bold text-white">

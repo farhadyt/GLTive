@@ -5,14 +5,14 @@ import { useMovements } from "../hooks/useStockQueries";
 import { Skeleton } from "@/shared/ui";
 
 const MOVEMENT_TYPES = [
-  { value: "", label: "All" },
-  { value: "stock_in", label: "Stock In" },
-  { value: "stock_out", label: "Stock Out" },
-  { value: "transfer_in", label: "Transfer In" },
-  { value: "transfer_out", label: "Transfer Out" },
-  { value: "adjustment_plus", label: "Adjust +" },
-  { value: "adjustment_minus", label: "Adjust −" },
-];
+  { value: "", labelKey: "common.all" },
+  { value: "stock_in", labelKey: "dashboard.stock_in" },
+  { value: "stock_out", labelKey: "dashboard.stock_out" },
+  { value: "transfer_in", labelKey: "nav.transfer" },
+  { value: "transfer_out", labelKey: "nav.transfer" },
+  { value: "adjustment_plus", labelKey: "dashboard.adjustment" },
+  { value: "adjustment_minus", labelKey: "dashboard.adjustment" },
+] as const;
 
 export function MovementsPage() {
   const { t } = useTranslation();
@@ -54,7 +54,7 @@ export function MovementsPage() {
                   : "bg-[var(--surface-container-highest)] text-[var(--color-outline)] hover:text-white"
               }`}
             >
-              {mt.label}
+              {t(mt.labelKey)}{mt.value.includes("plus") ? " +" : mt.value.includes("minus") ? " −" : mt.value.includes("transfer_in") ? " ↓" : mt.value.includes("transfer_out") ? " ↑" : ""}
             </button>
           ))}
         </div>
@@ -74,13 +74,13 @@ export function MovementsPage() {
               <table className="w-full text-left border-collapse">
                 <thead className="text-[10px] text-[var(--color-outline)] uppercase font-black tracking-widest">
                   <tr>
-                    <th className="px-6 py-4">Type</th>
+                    <th className="px-6 py-4">{t("common.type")}</th>
                     <th className="px-6 py-4">{t("dashboard.item_name")}</th>
-                    <th className="px-6 py-4 text-right">Qty</th>
-                    <th className="px-6 py-4">From</th>
-                    <th className="px-6 py-4">To</th>
-                    <th className="px-6 py-4">By</th>
-                    <th className="px-6 py-4 text-right">Date</th>
+                    <th className="px-6 py-4 text-right">{t("common.qty")}</th>
+                    <th className="px-6 py-4">{t("common.from")}</th>
+                    <th className="px-6 py-4">{t("common.to")}</th>
+                    <th className="px-6 py-4">{t("common.by")}</th>
+                    <th className="px-6 py-4 text-right">{t("common.date")}</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
