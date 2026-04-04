@@ -77,3 +77,57 @@ export interface LowStockItem {
   quantity_available: string;
   tracking_type: string;
 }
+
+// ─── Lookups ───
+export interface LookupItem {
+  id: string;
+  display_name?: string;
+  name?: string;
+  code?: string;
+  internal_code?: string;
+  tracking_type?: string;
+  model_name?: string;
+  model_code?: string;
+}
+
+// ─── Operations ───
+export interface ReceiveQuantityPayload {
+  stock_item_id: string;
+  quantity: string;
+  unit_cost?: string;
+  reference_type?: string;
+  note?: string;
+}
+
+export interface IssueQuantityPayload {
+  stock_item_id: string;
+  quantity: string;
+  reference_type?: string;
+  note?: string;
+}
+
+export interface TransferQuantityPayload {
+  source_stock_item_id: string;
+  target_warehouse_id: string;
+  quantity: string;
+  note?: string;
+}
+
+export interface AdjustmentSession {
+  id: string;
+  session_code: string;
+  warehouse_id: string;
+  reason: string;
+  status: "draft" | "confirmed" | "cancelled";
+  created_by: string | null;
+  confirmed_by: string | null;
+  confirmed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdjustmentLineInput {
+  stock_item_id: string;
+  counted_quantity: string;
+  note?: string;
+}

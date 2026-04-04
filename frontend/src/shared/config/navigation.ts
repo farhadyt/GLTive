@@ -4,6 +4,10 @@ import {
   Package,
   Tags,
   History,
+  PackagePlus,
+  PackageMinus,
+  ArrowRightLeft,
+  ClipboardCheck,
 } from "lucide-react";
 import { STOCK_PERMISSIONS } from "./permissions";
 
@@ -22,8 +26,6 @@ export interface NavGroup {
 
 /**
  * Navigation registry — ONLY routes that exist in the router.
- * When a new page is implemented and added to router.tsx,
- * add it here too. Do NOT add routes that lead to 404.
  */
 export const NAVIGATION: NavGroup[] = [
   {
@@ -46,6 +48,30 @@ export const NAVIGATION: NavGroup[] = [
         path: "/stock/items",
         icon: Package,
         permission: STOCK_PERMISSIONS.VIEW,
+      },
+      {
+        label: "nav.receive",
+        path: "/stock/receive",
+        icon: PackagePlus,
+        permission: STOCK_PERMISSIONS.RECEIVE,
+      },
+      {
+        label: "nav.issue",
+        path: "/stock/issue",
+        icon: PackageMinus,
+        permission: STOCK_PERMISSIONS.ISSUE,
+      },
+      {
+        label: "nav.transfer",
+        path: "/stock/transfer",
+        icon: ArrowRightLeft,
+        permission: STOCK_PERMISSIONS.TRANSFER,
+      },
+      {
+        label: "nav.adjustments",
+        path: "/stock/adjustments",
+        icon: ClipboardCheck,
+        permission: STOCK_PERMISSIONS.ADJUST,
       },
       {
         label: "nav.movements",

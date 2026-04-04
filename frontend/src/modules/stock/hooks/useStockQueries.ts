@@ -8,6 +8,15 @@ import {
   updateCategory,
   fetchStockItems,
   fetchMovements,
+  fetchLookupItems,
+  fetchLookupWarehouses,
+  receiveQuantity,
+  issueQuantity,
+  transferQuantity,
+  createAdjustmentSession,
+  upsertAdjustmentLines,
+  confirmAdjustmentSession,
+  cancelAdjustmentSession,
 } from "../api/stock-api";
 
 // ─── Query Keys ───
@@ -86,4 +95,78 @@ export function useMovements(params: Record<string, unknown> = {}) {
     queryKey: stockKeys.movements(params),
     queryFn: () => fetchMovements(params as Parameters<typeof fetchMovements>[0]),
   });
+}
+
+// ─── Lookups ───
+export function useLookupItems() {
+  return useQuery({
+    queryKey: ["stock", "lookups", "items"] as const,
+    queryFn: fetchLookupItems,
+    staleTime: 60_000,
+  });
+}
+
+export function useLookupWarehouses() {
+  return useQuery({
+    queryKey: ["stock", "lookups", "warehouses"] as const,
+    queryFn: fetchLookupWarehouses,
+    staleTime: 60_000,
+  });
+}
+
+// ─── Operation Mutations ───
+export function useReceiveQuantity() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: receiveQuantity,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["stock"] });
+    },
+  });
+}
+
+export function useIssueQuantity() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: issueQuantity,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["stock"] });
+    },
+  });
+}
+
+export function useTransferQuantity() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: transferQuantity,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["stock"] });
+    },
+  });
+}
+
+// ─── Adjustment Mutations ───
+export function useCreateAdjustmentSession() {
+  return useMutation({ mutationFn: createAdjustmentSession });
+}
+
+export function useUpsertAdjustmentLines() {
+  return useMutation({
+    mutationFn: ({ sessionId, lines }: { sessionId: string; lines: Parameters<typeof upsertAdjustmentLines>[1] }) =>
+      upsertAdjustmentLines(sessionId, lines),
+  });
+}
+
+export function useConfirmAdjustment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: confirmAdjustmentSession,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["stock"] });
+    },
+  });
+}
+
+export function useCancelAdjustment() {
+  return useMutation({ mutationFn: cancelAdjustmentSession });
 }

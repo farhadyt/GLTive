@@ -34,6 +34,26 @@ const MovementsPage = lazy(() =>
     default: m.MovementsPage,
   }))
 );
+const ReceivePage = lazy(() =>
+  import("@/modules/stock/pages/ReceivePage").then((m) => ({
+    default: m.ReceivePage,
+  }))
+);
+const IssuePage = lazy(() =>
+  import("@/modules/stock/pages/IssuePage").then((m) => ({
+    default: m.IssuePage,
+  }))
+);
+const TransferPage = lazy(() =>
+  import("@/modules/stock/pages/TransferPage").then((m) => ({
+    default: m.TransferPage,
+  }))
+);
+const AdjustmentsPage = lazy(() =>
+  import("@/modules/stock/pages/AdjustmentsPage").then((m) => ({
+    default: m.AdjustmentsPage,
+  }))
+);
 
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -50,7 +70,6 @@ function SuspenseWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export const router = createBrowserRouter([
-  // Public routes
   {
     element: <PublicGuard />,
     children: [
@@ -64,7 +83,6 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  // Authenticated routes
   {
     element: <AuthGuard />,
     children: [
@@ -72,7 +90,7 @@ export const router = createBrowserRouter([
         element: <AppShell />,
         children: [
           { index: true, element: <Navigate to="/stock" replace /> },
-          // Stock module — permission-guarded
+          // Stock view routes
           {
             element: <PermissionGuard permission={STOCK_PERMISSIONS.VIEW} />,
             children: [
@@ -102,7 +120,68 @@ export const router = createBrowserRouter([
               },
             ],
           },
-          // Movement history — separate permission
+          // Stock operations — separate permissions
+          {
+            element: (
+              <PermissionGuard permission={STOCK_PERMISSIONS.RECEIVE} />
+            ),
+            children: [
+              {
+                path: "/stock/receive",
+                element: (
+                  <SuspenseWrapper>
+                    <ReceivePage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
+          },
+          {
+            element: (
+              <PermissionGuard permission={STOCK_PERMISSIONS.ISSUE} />
+            ),
+            children: [
+              {
+                path: "/stock/issue",
+                element: (
+                  <SuspenseWrapper>
+                    <IssuePage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
+          },
+          {
+            element: (
+              <PermissionGuard permission={STOCK_PERMISSIONS.TRANSFER} />
+            ),
+            children: [
+              {
+                path: "/stock/transfer",
+                element: (
+                  <SuspenseWrapper>
+                    <TransferPage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
+          },
+          {
+            element: (
+              <PermissionGuard permission={STOCK_PERMISSIONS.ADJUST} />
+            ),
+            children: [
+              {
+                path: "/stock/adjustments",
+                element: (
+                  <SuspenseWrapper>
+                    <AdjustmentsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
+          },
+          // Movement history
           {
             element: (
               <PermissionGuard permission={STOCK_PERMISSIONS.HISTORY_VIEW} />
@@ -118,7 +197,7 @@ export const router = createBrowserRouter([
               },
             ],
           },
-          // Utility routes
+          // Utility
           {
             path: "/403",
             element: (
