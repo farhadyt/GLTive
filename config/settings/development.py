@@ -8,6 +8,12 @@ from config.settings.base import *  # noqa: F401, F403
 DEBUG = True
 
 # ---------------------
+# Development secret fallback — safe ONLY for local development
+# ---------------------
+if not SECRET_KEY:  # noqa: F405
+    SECRET_KEY = "django-insecure-dev-only-do-not-use-in-production"  # noqa: F811
+
+# ---------------------
 # Debug toolbar
 # ---------------------
 INSTALLED_APPS += ["debug_toolbar"]  # noqa: F405

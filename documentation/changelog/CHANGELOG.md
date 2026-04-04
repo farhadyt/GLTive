@@ -8,6 +8,19 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Replaced hardcoded "core.User" with settings.AUTH_USER_MODEL
   in audit/models/log.py
 
+## [0.7.3] - 2026-04-04
+### Fixed
+- Production SECRET_KEY enforcement: startup fails explicitly if key is missing or weak
+- Production CORS: resolved TODO, now env-driven with no wildcard default
+- Added SECURE_PROXY_SSL_HEADER, SECURE_SSL_REDIRECT, HttpOnly cookies for production
+- All paginated stock querysets now have explicit deterministic ordering
+  (eliminates UnorderedObjectListWarning)
+- Development settings use clearly labeled insecure fallback secret
+
+### Added
+- Production deployment runbook in operations documentation
+- .env.example updated with production-specific variables and security notes
+
 ## [0.7.2] - 2026-04-04
 ### Added
 - CompanyResolveMixin: resolves request.company after DRF JWT authentication,

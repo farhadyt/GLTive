@@ -16,7 +16,7 @@ load_dotenv(BASE_DIR / ".env")
 # ---------------------
 # Security
 # ---------------------
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "INSECURE-change-me")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 # ---------------------

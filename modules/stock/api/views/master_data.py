@@ -38,7 +38,9 @@ class CategoryViewSet(CompanyScopedViewSet):
     serializer_class = CategorySerializer
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True, is_deleted=False)
+        return super().get_queryset().filter(
+            is_active=True, is_deleted=False,
+        ).order_by("sort_order", "name")
 
     def get_permissions(self):
         if self.action in ("list", "retrieve"):
@@ -90,7 +92,9 @@ class BrandViewSet(CompanyScopedViewSet):
     serializer_class = BrandSerializer
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True, is_deleted=False)
+        return super().get_queryset().filter(
+            is_active=True, is_deleted=False,
+        ).order_by("name")
 
     def get_permissions(self):
         if self.action in ("list", "retrieve"):
@@ -142,7 +146,9 @@ class VendorViewSet(CompanyScopedViewSet):
     serializer_class = VendorSerializer
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True, is_deleted=False)
+        return super().get_queryset().filter(
+            is_active=True, is_deleted=False,
+        ).order_by("name")
 
     def get_permissions(self):
         if self.action in ("list", "retrieve"):
@@ -193,7 +199,9 @@ class ItemModelViewSet(CompanyScopedViewSet):
     queryset = ItemModel.objects.all()
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True, is_deleted=False)
+        return super().get_queryset().filter(
+            is_active=True, is_deleted=False,
+        ).order_by("model_name")
 
     def get_permissions(self):
         if self.action in ("list", "retrieve"):
@@ -252,7 +260,9 @@ class WarehouseViewSet(CompanyScopedViewSet):
     serializer_class = WarehouseSerializer
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True, is_deleted=False)
+        return super().get_queryset().filter(
+            is_active=True, is_deleted=False,
+        ).order_by("code")
 
     def get_permissions(self):
         if self.action in ("list", "retrieve"):

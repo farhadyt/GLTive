@@ -21,7 +21,9 @@ class StockItemViewSet(CompanyScopedViewSet):
     queryset = StockItem.objects.all()
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True, is_deleted=False)
+        return super().get_queryset().filter(
+            is_active=True, is_deleted=False,
+        ).order_by("-created_at")
 
     def get_permissions(self):
         if self.action in ("list", "retrieve"):
