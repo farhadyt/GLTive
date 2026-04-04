@@ -8,6 +8,41 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Replaced hardcoded "core.User" with settings.AUTH_USER_MODEL
   in audit/models/log.py
 
+## [0.7.2] - 2026-04-04
+### Added
+- CompanyResolveMixin: resolves request.company after DRF JWT authentication,
+  before permission checks — fixes architectural gap where TenantMiddleware
+  ran before DRF decoded JWT tokens, leaving request.company=None for all
+  JWT-authenticated requests
+- CompanyScopedAPIView: base APIView class with company resolution for
+  command-style endpoints (receive, issue, transfer, adjustments, alerts, dashboard)
+- Stock permission bootstrap management command (bootstrap_stock_permissions)
+  - 9 permission codes seeded idempotently: stock.view, stock.manage,
+    stock.master.manage, stock.receive, stock.issue, stock.transfer,
+    stock.adjust, stock.alert.manage, stock.history.view
+- Critical automated test coverage for stock module (33 tests):
+  - Service tests: receive, issue, transfer, adjustment, deactivation blocking
+  - API tests: auth/permission enforcement, tenant isolation, exception mapping,
+    command endpoints, lookup endpoints, bootstrap verification
+  - Cross-company boundary tests for transfer and serialized issue flows
+
+### Fixed
+- All stock APIViews now use CompanyScopedAPIView instead of bare APIView
+- All stock lookup/movement ViewSets now include CompanyResolveMixin
+- Movement history view: replaced function-local Q import with top-level import
+- Removed orphan helper function from movements view
+
+## [0.7.1] - 2026-04-04
+### Fixed
+- All post-operation stock item fetches now use company-scoped lookups
+  (pk + company=request.company) for defense-in-depth tenant safety
+- Alert evaluation after stock operations now wrapped in safe handler —
+  alert failure cannot break a successful main mutation response
+- Adjustment confirm follow-up now uses bulk company-scoped fetch
+  instead of N individual pk-only queries
+- Design decision documented: alert evaluation is intentionally post-transaction
+  and failure-isolated from the primary stock mutation
+
 ## [0.7.0] - 2026-04-04
 ### Added
 - Stock Exception Mapping: StockValidationError→400, StockNotFoundError→404,

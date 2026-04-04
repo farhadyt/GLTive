@@ -4,8 +4,8 @@ Alert Views
 Company-scoped alert event list and status transition endpoints.
 """
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 
+from core.api.base import CompanyScopedAPIView
 from core.permissions.base import IsCompanyMember
 from modules.stock.api.permissions import CanManageAlerts, CanViewStock
 from modules.stock.api.serializers.alerts import AlertEventOutputSerializer
@@ -14,7 +14,7 @@ from modules.stock.services import StockAlertService
 from shared.responses.base import success_response
 
 
-class AlertListView(APIView):
+class AlertListView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanViewStock]
 
     def get(self, request):
@@ -31,7 +31,7 @@ class AlertListView(APIView):
         return success_response(data=serializer.data)
 
 
-class AcknowledgeAlertView(APIView):
+class AcknowledgeAlertView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanManageAlerts]
 
     def post(self, request, alert_id):
@@ -44,7 +44,7 @@ class AcknowledgeAlertView(APIView):
         return success_response(data=output.data)
 
 
-class ResolveAlertView(APIView):
+class ResolveAlertView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanManageAlerts]
 
     def post(self, request, alert_id):

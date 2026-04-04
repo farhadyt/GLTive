@@ -12,8 +12,8 @@ Design decision:
 import logging
 
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 
+from core.api.base import CompanyScopedAPIView
 from core.permissions.base import IsCompanyMember
 from modules.stock.api.permissions import (
     CanReceiveStock,
@@ -58,7 +58,7 @@ def _safe_evaluate_alerts(company, stock_item):
         )
 
 
-class ReceiveQuantityView(APIView):
+class ReceiveQuantityView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanReceiveStock]
 
     def post(self, request):
@@ -77,7 +77,7 @@ class ReceiveQuantityView(APIView):
         return created_response(data=result)
 
 
-class ReceiveSerializedView(APIView):
+class ReceiveSerializedView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanReceiveStock]
 
     def post(self, request):
@@ -95,7 +95,7 @@ class ReceiveSerializedView(APIView):
         return created_response(data=result)
 
 
-class IssueQuantityView(APIView):
+class IssueQuantityView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanIssueStock]
 
     def post(self, request):
@@ -113,7 +113,7 @@ class IssueQuantityView(APIView):
         return success_response(data=result)
 
 
-class IssueSerializedView(APIView):
+class IssueSerializedView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanIssueStock]
 
     def post(self, request):
@@ -131,7 +131,7 @@ class IssueSerializedView(APIView):
         return success_response(data=result)
 
 
-class TransferQuantityView(APIView):
+class TransferQuantityView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanTransferStock]
 
     def post(self, request):
@@ -154,7 +154,7 @@ class TransferQuantityView(APIView):
         return success_response(data=result)
 
 
-class TransferSerializedView(APIView):
+class TransferSerializedView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanTransferStock]
 
     def post(self, request):

@@ -12,8 +12,8 @@ Design decision:
 import logging
 
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 
+from core.api.base import CompanyScopedAPIView
 from core.permissions.base import IsCompanyMember
 from modules.stock.api.permissions import CanAdjustStock
 from modules.stock.api.serializers.adjustments import (
@@ -47,7 +47,7 @@ def _safe_evaluate_alerts(company, stock_item):
         )
 
 
-class CreateAdjustmentSessionView(APIView):
+class CreateAdjustmentSessionView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanAdjustStock]
 
     def post(self, request):
@@ -62,7 +62,7 @@ class CreateAdjustmentSessionView(APIView):
         return created_response(data=output.data)
 
 
-class UpsertAdjustmentLinesView(APIView):
+class UpsertAdjustmentLinesView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanAdjustStock]
 
     def put(self, request, session_id):
@@ -78,7 +78,7 @@ class UpsertAdjustmentLinesView(APIView):
         return success_response(data=output.data)
 
 
-class ConfirmAdjustmentSessionView(APIView):
+class ConfirmAdjustmentSessionView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanAdjustStock]
 
     def post(self, request, session_id):
@@ -103,7 +103,7 @@ class ConfirmAdjustmentSessionView(APIView):
         return success_response(data=result)
 
 
-class CancelAdjustmentSessionView(APIView):
+class CancelAdjustmentSessionView(CompanyScopedAPIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanAdjustStock]
 
     def post(self, request, session_id):

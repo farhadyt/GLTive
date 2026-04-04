@@ -7,6 +7,7 @@ from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
+from core.api.base import CompanyResolveMixin
 from core.permissions.base import IsCompanyMember
 from modules.stock.api.permissions import CanViewStock
 from modules.stock.api.serializers.lookups import (
@@ -27,7 +28,7 @@ from modules.stock.models import (
 )
 
 
-class _BaseLookupViewSet(ListModelMixin, GenericViewSet):
+class _BaseLookupViewSet(CompanyResolveMixin, ListModelMixin, GenericViewSet):
     """Base lookup viewset with common configuration."""
     permission_classes = [IsAuthenticated, IsCompanyMember, CanViewStock]
     pagination_class = None

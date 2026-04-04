@@ -5,17 +5,20 @@ Read-only. Queries StockMovement model directly — acceptable for read-only
 endpoints with no business logic. This is a documented design decision,
 not a service-layer violation.
 """
+from django.db.models import Q
+
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
+from core.api.base import CompanyResolveMixin
 from core.permissions.base import IsCompanyMember
 from modules.stock.api.permissions import CanViewHistory
 from modules.stock.api.serializers.movements import MovementOutputSerializer
 from modules.stock.models import StockMovement
 
 
-class MovementViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+class MovementViewSet(CompanyResolveMixin, ListModelMixin, RetrieveModelMixin, GenericViewSet):
     """
     Read-only movement history endpoint.
     Design decision: queries StockMovement directly (no service layer needed
@@ -46,7 +49,7 @@ class MovementViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         warehouse_id = self.request.query_params.get("warehouse_id")
         if warehouse_id:
             qs = qs.filter(
-                models_Q_source_or_target(warehouse_id)
+                Q(source_warehouse_id=warehouse_id) | Q(target_warehouse_id=warehouse_id)
             )
 
         movement_type = self.request.query_params.get("movement_type")
@@ -62,9 +65,3 @@ class MovementViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             qs = qs.filter(performed_at__lte=date_to)
 
         return qs
-
-
-def models_Q_source_or_target(warehouse_id):
-    """Build Q filter for movements involving a specific warehouse."""
-    from django.db.models import Q
-    return Q(source_warehouse_id=warehouse_id) | Q(target_warehouse_id=warehouse_id)

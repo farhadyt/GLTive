@@ -8,6 +8,8 @@ The Stock & Inventory Foundation is the foundational module capturing all raw as
 - **Data Models:** ✅ Implemented. All 12 base stock models are fully created with company isolation.
 - **Service Layer:** ✅ Implemented (12 services total across Part 1, Part 2, and Part 3)
 - **API Endpoints:** ✅ Implemented (40+ endpoints with full permission enforcement).
+- **Permission Bootstrap:** ✅ Implemented (management command: bootstrap_stock_permissions).
+- **Test Coverage:** ✅ Critical service and API tests implemented.
 - **Dynamic Attributes:** 🟡 Not in Scope for Phase 1 (Intentional design).
 - **Asset Assignment Lifecycle:** 🟡 Not in Scope for Phase 1 (Intentional design).
 
