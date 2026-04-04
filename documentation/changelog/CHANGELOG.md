@@ -8,6 +8,22 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Replaced hardcoded "core.User" with settings.AUTH_USER_MODEL
   in audit/models/log.py
 
+## [0.8.0] - 2026-04-04
+### Added
+- GLTive Web UI Foundation (React + TypeScript + Vite + TailwindCSS)
+- App shell: collapsible sidebar, topbar, responsive layout
+- Design system: 14 shared UI components (Button, Input, Select, TextArea,
+  Checkbox, Modal, DataTable, Badge, Card, Skeleton, EmptyState, PageHeader,
+  Spinner, Toast)
+- Auth/JWT foundation: in-memory token storage, login/logout flow, auth context
+- Permission-aware rendering: usePermission hook, CanAccess wrapper, route guards
+- API client: Axios with auth header injection, error normalization, TanStack Query
+- i18n foundation: 5 languages (EN, AZ, RU, TR, AR) with RTL switching for Arabic
+- Routing: React Router with lazy loading, AuthGuard, PublicGuard, PermissionGuard
+- Stock module placeholder pages: dashboard, categories, items, movements
+- Dark/light theme with system preference detection and persistence
+- Language switcher with localStorage persistence
+
 ## [0.7.3] - 2026-04-04
 ### Fixed
 - Production SECRET_KEY enforcement: startup fails explicitly if key is missing or weak

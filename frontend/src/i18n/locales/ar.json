@@ -1,0 +1,55 @@
+{
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "create": "إنشاء",
+    "edit": "تعديل",
+    "search": "بحث",
+    "filter": "تصفية",
+    "loading": "جاري التحميل...",
+    "no_data": "لا توجد بيانات",
+    "confirm": "تأكيد",
+    "back": "رجوع",
+    "actions": "إجراءات",
+    "status": "الحالة",
+    "coming_soon": "قريباً",
+    "coming_soon_desc": "هذا القسم قيد التطوير.",
+    "access_denied": "الوصول مرفوض",
+    "access_denied_desc": "ليس لديك إذن للوصول إلى هذه الصفحة.",
+    "not_found": "الصفحة غير موجودة",
+    "not_found_desc": "الصفحة التي تبحث عنها غير موجودة."
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "login_title": "تسجيل الدخول إلى GLTive",
+    "login_subtitle": "منصة عمليات تكنولوجيا المعلومات للمؤسسات",
+    "login_error": "اسم المستخدم أو كلمة المرور غير صحيحة"
+  },
+  "nav": {
+    "stock": "المخزون والجرد",
+    "dashboard": "لوحة التحكم",
+    "categories": "التصنيفات",
+    "brands": "العلامات التجارية",
+    "vendors": "الموردون",
+    "warehouses": "المستودعات",
+    "item_models": "نماذج المنتجات",
+    "items": "عناصر المخزون",
+    "receive": "الاستلام",
+    "transfer": "النقل",
+    "adjustments": "التعديلات",
+    "alerts": "التنبيهات",
+    "movements": "سجل الحركات"
+  },
+  "shell": {
+    "collapse_sidebar": "طي الشريط الجانبي",
+    "expand_sidebar": "توسيع الشريط الجانبي",
+    "dark_mode": "الوضع الداكن",
+    "light_mode": "الوضع الفاتح",
+    "language": "اللغة",
+    "user_menu": "قائمة المستخدم"
+  }
+}

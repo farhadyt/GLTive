@@ -1,0 +1,55 @@
+{
+  "common": {
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "create": "Oluştur",
+    "edit": "Düzenle",
+    "search": "Ara",
+    "filter": "Filtre",
+    "loading": "Yükleniyor...",
+    "no_data": "Veri bulunamadı",
+    "confirm": "Onayla",
+    "back": "Geri",
+    "actions": "İşlemler",
+    "status": "Durum",
+    "coming_soon": "Yakında",
+    "coming_soon_desc": "Bu bölüm geliştirme aşamasındadır.",
+    "access_denied": "Erişim Engellendi",
+    "access_denied_desc": "Bu sayfaya erişim yetkiniz yoktur.",
+    "not_found": "Sayfa Bulunamadı",
+    "not_found_desc": "Aradığınız sayfa mevcut değildir."
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "logout": "Çıkış",
+    "username": "Kullanıcı Adı",
+    "password": "Şifre",
+    "login_title": "GLTive'a Giriş",
+    "login_subtitle": "Kurumsal BT Operasyonları Platformu",
+    "login_error": "Geçersiz kullanıcı adı veya şifre"
+  },
+  "nav": {
+    "stock": "Stok ve Envanter",
+    "dashboard": "Kontrol Paneli",
+    "categories": "Kategoriler",
+    "brands": "Markalar",
+    "vendors": "Tedarikçiler",
+    "warehouses": "Depolar",
+    "item_models": "Ürün Modelleri",
+    "items": "Stok Kalemleri",
+    "receive": "Kabul",
+    "transfer": "Transfer",
+    "adjustments": "Düzeltmeler",
+    "alerts": "Uyarılar",
+    "movements": "Hareket Geçmişi"
+  },
+  "shell": {
+    "collapse_sidebar": "Kenar çubuğunu daralt",
+    "expand_sidebar": "Kenar çubuğunu genişlet",
+    "dark_mode": "Karanlık mod",
+    "light_mode": "Aydınlık mod",
+    "language": "Dil",
+    "user_menu": "Kullanıcı menüsü"
+  }
+}

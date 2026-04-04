@@ -1,0 +1,55 @@
+{
+  "common": {
+    "save": "Yadda saxla",
+    "cancel": "Ləğv et",
+    "delete": "Sil",
+    "create": "Yarat",
+    "edit": "Redaktə et",
+    "search": "Axtar",
+    "filter": "Filtr",
+    "loading": "Yüklənir...",
+    "no_data": "Məlumat yoxdur",
+    "confirm": "Təsdiqlə",
+    "back": "Geri",
+    "actions": "Əməliyyatlar",
+    "status": "Status",
+    "coming_soon": "Tezliklə",
+    "coming_soon_desc": "Bu bölmə hazırlanma mərhələsindədir.",
+    "access_denied": "Giriş qadağandır",
+    "access_denied_desc": "Bu səhifəyə giriş icazəniz yoxdur.",
+    "not_found": "Səhifə tapılmadı",
+    "not_found_desc": "Axtardığınız səhifə mövcud deyil."
+  },
+  "auth": {
+    "login": "Daxil ol",
+    "logout": "Çıxış",
+    "username": "İstifadəçi adı",
+    "password": "Şifrə",
+    "login_title": "GLTive-ə daxil olun",
+    "login_subtitle": "Müəssisə İT Əməliyyatları Platforması",
+    "login_error": "Yanlış istifadəçi adı və ya şifrə"
+  },
+  "nav": {
+    "stock": "Anbar və İnventar",
+    "dashboard": "İdarə Paneli",
+    "categories": "Kateqoriyalar",
+    "brands": "Brendlər",
+    "vendors": "Təchizatçılar",
+    "warehouses": "Anbarlar",
+    "item_models": "Məhsul Modelləri",
+    "items": "Stok Elementləri",
+    "receive": "Qəbul",
+    "transfer": "Transfer",
+    "adjustments": "Düzəlişlər",
+    "alerts": "Xəbərdarlıqlar",
+    "movements": "Hərəkət Tarixçəsi"
+  },
+  "shell": {
+    "collapse_sidebar": "Yan paneli yığ",
+    "expand_sidebar": "Yan paneli aç",
+    "dark_mode": "Qaranlıq rejim",
+    "light_mode": "İşıqlı rejim",
+    "language": "Dil",
+    "user_menu": "İstifadəçi menyusu"
+  }
+}

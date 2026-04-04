@@ -1,0 +1,55 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "create": "Create",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "no_data": "No data available",
+    "confirm": "Confirm",
+    "back": "Back",
+    "actions": "Actions",
+    "status": "Status",
+    "coming_soon": "Coming Soon",
+    "coming_soon_desc": "This section is under development.",
+    "access_denied": "Access Denied",
+    "access_denied_desc": "You do not have permission to access this page.",
+    "not_found": "Page Not Found",
+    "not_found_desc": "The page you are looking for does not exist."
+  },
+  "auth": {
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "username": "Username",
+    "password": "Password",
+    "login_title": "Sign in to GLTive",
+    "login_subtitle": "Enterprise IT Operations Platform",
+    "login_error": "Invalid username or password"
+  },
+  "nav": {
+    "stock": "Stock & Inventory",
+    "dashboard": "Dashboard",
+    "categories": "Categories",
+    "brands": "Brands",
+    "vendors": "Vendors",
+    "warehouses": "Warehouses",
+    "item_models": "Item Models",
+    "items": "Stock Items",
+    "receive": "Receive",
+    "transfer": "Transfer",
+    "adjustments": "Adjustments",
+    "alerts": "Alerts",
+    "movements": "Movement History"
+  },
+  "shell": {
+    "collapse_sidebar": "Collapse sidebar",
+    "expand_sidebar": "Expand sidebar",
+    "dark_mode": "Dark mode",
+    "light_mode": "Light mode",
+    "language": "Language",
+    "user_menu": "User menu"
+  }
+}
