@@ -2,7 +2,15 @@
 """
 Operation Command Views
 Each is a separate APIView with post(). Alert evaluation called AFTER service operation.
+
+Design decision:
+    Alert evaluation is a post-operation follow-up, intentionally separated from
+    the main mutation transaction. Alert evaluation failure does NOT invalidate
+    an already successful stock mutation response. This is by design — the stock
+    mutation is the primary operation; alert evaluation is secondary.
 """
+import logging
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
@@ -29,6 +37,26 @@ from modules.stock.services import (
 )
 from shared.responses.base import success_response, created_response
 
+logger = logging.getLogger(__name__)
+
+
+def _safe_evaluate_alerts(company, stock_item):
+    """
+    Evaluate alerts for a stock item in a failure-safe manner.
+    If alert evaluation raises any exception, it is logged but does NOT
+    propagate — the main stock operation response remains unaffected.
+    """
+    try:
+        StockAlertService.evaluate_alerts_for_stock_item(
+            company=company, stock_item=stock_item,
+        )
+    except Exception:
+        logger.exception(
+            "Alert evaluation failed for stock_item=%s company=%s — "
+            "main operation succeeded, alert follow-up suppressed.",
+            stock_item.pk, company.pk,
+        )
+
 
 class ReceiveQuantityView(APIView):
     permission_classes = [IsAuthenticated, IsCompanyMember, CanReceiveStock]
@@ -41,11 +69,11 @@ class ReceiveQuantityView(APIView):
             data=serializer.validated_data,
             actor=request.user,
         )
-        # Alert evaluation AFTER transaction commits
-        stock_item = StockItem.objects.get(pk=result["stock_item_id"])
-        StockAlertService.evaluate_alerts_for_stock_item(
-            company=request.company, stock_item=stock_item,
+        # Alert evaluation AFTER transaction commits — company-scoped fetch
+        stock_item = StockItem.objects.get(
+            pk=result["stock_item_id"], company=request.company,
         )
+        _safe_evaluate_alerts(request.company, stock_item)
         return created_response(data=result)
 
 
@@ -60,10 +88,10 @@ class ReceiveSerializedView(APIView):
             data=serializer.validated_data,
             actor=request.user,
         )
-        stock_item = StockItem.objects.get(pk=result["stock_item_id"])
-        StockAlertService.evaluate_alerts_for_stock_item(
-            company=request.company, stock_item=stock_item,
+        stock_item = StockItem.objects.get(
+            pk=result["stock_item_id"], company=request.company,
         )
+        _safe_evaluate_alerts(request.company, stock_item)
         return created_response(data=result)
 
 
@@ -78,10 +106,10 @@ class IssueQuantityView(APIView):
             data=serializer.validated_data,
             actor=request.user,
         )
-        stock_item = StockItem.objects.get(pk=result["stock_item_id"])
-        StockAlertService.evaluate_alerts_for_stock_item(
-            company=request.company, stock_item=stock_item,
+        stock_item = StockItem.objects.get(
+            pk=result["stock_item_id"], company=request.company,
         )
+        _safe_evaluate_alerts(request.company, stock_item)
         return success_response(data=result)
 
 
@@ -96,10 +124,10 @@ class IssueSerializedView(APIView):
             data=serializer.validated_data,
             actor=request.user,
         )
-        stock_item = StockItem.objects.get(pk=result["stock_item_id"])
-        StockAlertService.evaluate_alerts_for_stock_item(
-            company=request.company, stock_item=stock_item,
+        stock_item = StockItem.objects.get(
+            pk=result["stock_item_id"], company=request.company,
         )
+        _safe_evaluate_alerts(request.company, stock_item)
         return success_response(data=result)
 
 
@@ -114,15 +142,15 @@ class TransferQuantityView(APIView):
             data=serializer.validated_data,
             actor=request.user,
         )
-        # Evaluate alerts for BOTH source and target
-        source = StockItem.objects.get(pk=result["source_stock_item_id"])
-        target = StockItem.objects.get(pk=result["target_stock_item_id"])
-        StockAlertService.evaluate_alerts_for_stock_item(
-            company=request.company, stock_item=source,
+        # Evaluate alerts for BOTH source and target — company-scoped
+        source = StockItem.objects.get(
+            pk=result["source_stock_item_id"], company=request.company,
         )
-        StockAlertService.evaluate_alerts_for_stock_item(
-            company=request.company, stock_item=target,
+        target = StockItem.objects.get(
+            pk=result["target_stock_item_id"], company=request.company,
         )
+        _safe_evaluate_alerts(request.company, source)
+        _safe_evaluate_alerts(request.company, target)
         return success_response(data=result)
 
 
@@ -137,12 +165,12 @@ class TransferSerializedView(APIView):
             data=serializer.validated_data,
             actor=request.user,
         )
-        source = StockItem.objects.get(pk=result["source_stock_item_id"])
-        target = StockItem.objects.get(pk=result["target_stock_item_id"])
-        StockAlertService.evaluate_alerts_for_stock_item(
-            company=request.company, stock_item=source,
+        source = StockItem.objects.get(
+            pk=result["source_stock_item_id"], company=request.company,
         )
-        StockAlertService.evaluate_alerts_for_stock_item(
-            company=request.company, stock_item=target,
+        target = StockItem.objects.get(
+            pk=result["target_stock_item_id"], company=request.company,
         )
+        _safe_evaluate_alerts(request.company, source)
+        _safe_evaluate_alerts(request.company, target)
         return success_response(data=result)

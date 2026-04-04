@@ -2,8 +2,15 @@
 """
 Adjustment Views
 Create session, upsert lines, confirm, cancel.
-Alert evaluation triggered after confirm for all affected stock items.
+
+Design decision:
+    Alert evaluation after confirm is a post-operation follow-up, intentionally
+    separated from the main confirm transaction. Alert evaluation failure does
+    NOT invalidate an already successful adjustment confirmation. The confirm
+    result is the primary response; alert evaluation is secondary.
 """
+import logging
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
@@ -18,6 +25,26 @@ from modules.stock.api.serializers.adjustments import (
 from modules.stock.models import StockAdjustmentLine, StockItem
 from modules.stock.services import StockAdjustmentService, StockAlertService
 from shared.responses.base import success_response, created_response
+
+logger = logging.getLogger(__name__)
+
+
+def _safe_evaluate_alerts(company, stock_item):
+    """
+    Evaluate alerts for a stock item in a failure-safe manner.
+    If alert evaluation raises any exception, it is logged but does NOT
+    propagate — the main stock operation response remains unaffected.
+    """
+    try:
+        StockAlertService.evaluate_alerts_for_stock_item(
+            company=company, stock_item=stock_item,
+        )
+    except Exception:
+        logger.exception(
+            "Alert evaluation failed for stock_item=%s company=%s — "
+            "main operation succeeded, alert follow-up suppressed.",
+            stock_item.pk, company.pk,
+        )
 
 
 class CreateAdjustmentSessionView(APIView):
@@ -60,15 +87,19 @@ class ConfirmAdjustmentSessionView(APIView):
             session_id=session_id,
             actor=request.user,
         )
-        # Alert evaluation AFTER confirmation for all affected stock items
-        lines = StockAdjustmentLine.objects.filter(
+        # Alert evaluation AFTER confirmation — company-scoped bulk fetch
+        affected_item_ids = StockAdjustmentLine.objects.filter(
             adjustment_session_id=result["session_id"],
+            company=request.company,
+        ).values_list("stock_item_id", flat=True).distinct()
+
+        affected_items = StockItem.objects.filter(
+            pk__in=affected_item_ids,
+            company=request.company,
         )
-        for line in lines:
-            stock_item = StockItem.objects.get(pk=line.stock_item_id)
-            StockAlertService.evaluate_alerts_for_stock_item(
-                company=request.company, stock_item=stock_item,
-            )
+        for stock_item in affected_items:
+            _safe_evaluate_alerts(request.company, stock_item)
+
         return success_response(data=result)
 
 
