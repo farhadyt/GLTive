@@ -53,6 +53,45 @@ class RefreshView(TokenRefreshView):
         }, status=status.HTTP_200_OK)
 
 
+class MeView(APIView):
+    """
+    Returns the authenticated user's session info: identity, company, and permissions.
+    This is the single source of truth for frontend session state after login.
+    """
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = request.user
+        company = getattr(request, "company", None) or getattr(user, "company", None)
+
+        # Collect permission codes from user's role
+        permissions = []
+        role_name = None
+        if getattr(user, "role", None):
+            role_name = user.role.name
+            permissions = list(
+                user.role.permissions.values_list("code", flat=True)
+            )
+
+        return Response({
+            "success": True,
+            "data": {
+                "id": str(user.pk),
+                "username": user.username,
+                "email": getattr(user, "email", ""),
+                "is_platform_admin": getattr(user, "is_platform_admin", False),
+                "is_company_admin": getattr(user, "is_company_admin", False),
+                "company": {
+                    "id": str(company.pk),
+                    "name": company.name,
+                    "code": company.code,
+                } if company else None,
+                "role": role_name,
+                "permissions": permissions,
+            }
+        }, status=status.HTTP_200_OK)
+
+
 class LogoutView(APIView):
     """
     Blacklists the provided refresh token.
