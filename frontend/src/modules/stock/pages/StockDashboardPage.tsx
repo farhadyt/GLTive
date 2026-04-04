@@ -29,7 +29,7 @@ export function StockDashboardPage() {
             <span className="text-[var(--color-primary)]">{t("nav.dashboard")}</span>
           </nav>
           <h1 className="text-3xl font-bold text-white tracking-tight">
-            Operations Dashboard
+            {t("nav.dashboard")}
           </h1>
         </div>
         <div className="flex items-center gap-3">
