@@ -35,21 +35,21 @@ export function StockDashboardPage() {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-[var(--surface-container-low)] rounded-lg text-xs font-semibold text-[var(--color-secondary)]">
             <span className="w-2 h-2 rounded-full bg-[var(--color-secondary)] animate-pulse-dot" />
-            LIVE FEED: SYNCED
+            {t("dashboard.live_feed").toUpperCase()}
           </div>
           <button className="bg-[var(--surface-container-highest)] text-white px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 hover:bg-[var(--surface-bright)] transition-colors">
-            This Week
+            {t("common.this_week")}
           </button>
         </div>
       </div>
 
       {/* KPI Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-        {/* Total Active Stock */}
+        {/* {t("dashboard.total_active_stock")} */}
         <div className="bg-[var(--surface-container-low)] p-6 rounded-xl border-l-4 border-[var(--color-primary)] relative overflow-hidden">
           <div className="flex justify-between items-start mb-4">
             <p className="text-[var(--color-outline)] text-xs font-bold uppercase tracking-widest">
-              Total Active Stock
+              {t("dashboard.total_active_stock")}
             </p>
             <Package className="w-5 h-5 text-[var(--color-primary)]/50" />
           </div>
@@ -65,17 +65,17 @@ export function StockDashboardPage() {
           </div>
         </div>
 
-        {/* Total Warehouses */}
+        {/* {t("dashboard.total_warehouses")} */}
         <div className="bg-[var(--surface-container-low)] p-6 rounded-xl relative overflow-hidden">
           <div className="flex justify-between items-start mb-4">
             <p className="text-[var(--color-outline)] text-xs font-bold uppercase tracking-widest">
-              Total Warehouses
+              {t("dashboard.total_warehouses")}
             </p>
             <WarehouseIcon className="w-5 h-5 text-[var(--color-outline)]" />
           </div>
           <div className="flex items-end gap-3">
             <span className="text-4xl font-bold text-white tracking-tight">18</span>
-            <span className="text-[var(--color-outline)] text-xs font-bold pb-1">GLOBAL</span>
+            <span className="text-[var(--color-outline)] text-xs font-bold pb-1">{t("common.global").toUpperCase()}</span>
           </div>
           <div className="mt-4 flex gap-1">
             <div className="h-2 w-full bg-[var(--color-primary)]/20 rounded-sm" />
@@ -84,22 +84,22 @@ export function StockDashboardPage() {
           </div>
         </div>
 
-        {/* Low Stock Alerts */}
+        {/* {t("dashboard.low_stock_alerts")} */}
         <div className="bg-[var(--surface-container-low)] p-6 rounded-xl border-l-4 border-[var(--color-error)] relative overflow-hidden">
           <div className="flex justify-between items-start mb-4">
             <p className="text-[var(--color-outline)] text-xs font-bold uppercase tracking-widest">
-              Low Stock Alerts
+              {t("dashboard.low_stock_alerts")}
             </p>
             <AlertTriangle className="w-5 h-5 text-[var(--color-error)]/50" />
           </div>
           <div className="flex items-end gap-3">
             <span className="text-4xl font-bold text-white tracking-tight">124</span>
             <span className="px-2 py-0.5 bg-[var(--color-error)]/10 text-[var(--color-error)] rounded-full text-[10px] font-black tracking-tighter mb-1 uppercase">
-              DANGER
+              {t("common.danger").toUpperCase()}
             </span>
           </div>
           <p className="mt-4 text-xs text-[var(--color-outline)] italic leading-tight">
-            Requires immediate procurement
+            {t("dashboard.requires_procurement")}
           </p>
         </div>
 
@@ -107,7 +107,7 @@ export function StockDashboardPage() {
         <div className="bg-[var(--surface-container-low)] p-6 rounded-xl relative overflow-hidden">
           <div className="flex justify-between items-start mb-4">
             <p className="text-[var(--color-outline)] text-xs font-bold uppercase tracking-widest">
-              Movements
+              {t("dashboard.movements_title")}
             </p>
             <ArrowRightLeft className="w-5 h-5 text-[var(--color-outline)]" />
           </div>
@@ -115,20 +115,20 @@ export function StockDashboardPage() {
             <span className="text-4xl font-bold text-white tracking-tight">3,102</span>
             <span className="text-[var(--color-secondary)] text-xs font-bold pb-1 flex items-center gap-0.5">
               <Zap className="w-3.5 h-3.5" />
-              ACTIVE
+              {t("common.active").toUpperCase()}
             </span>
           </div>
           <div className="mt-4 flex items-center justify-between">
-            <span className="text-[10px] text-[var(--color-outline)]">OUT: 1.4k</span>
-            <span className="text-[10px] text-[var(--color-outline)]">IN: 1.7k</span>
+            <span className="text-[10px] text-[var(--color-outline)]">{t("common.out").toUpperCase()}: 1.4k</span>
+            <span className="text-[10px] text-[var(--color-outline)]">{t("common.in").toUpperCase()}: 1.7k</span>
           </div>
         </div>
 
-        {/* Serialized Items */}
+        {/* {t("dashboard.serialized_items")} */}
         <div className="bg-[var(--surface-container-low)] p-6 rounded-xl relative overflow-hidden">
           <div className="flex justify-between items-start mb-4">
             <p className="text-[var(--color-outline)] text-xs font-bold uppercase tracking-widest">
-              Serialized Items
+              {t("dashboard.serialized_items")}
             </p>
             <QrCode className="w-5 h-5 text-[var(--color-outline)]" />
           </div>
@@ -137,7 +137,7 @@ export function StockDashboardPage() {
           </div>
           <div className="mt-4 text-[10px] text-[var(--color-outline)] flex items-center gap-2">
             <ShieldCheck className="w-3.5 h-3.5 text-[var(--color-secondary)]" />
-            98% SCAN ACCURACY
+            98% {t("dashboard.scan_accuracy").toUpperCase()}
           </div>
         </div>
       </div>
@@ -149,10 +149,10 @@ export function StockDashboardPage() {
           <div className="p-6 border-b border-white/5 flex justify-between items-center bg-[var(--surface-container-highest)]/20">
             <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
               <History className="w-4 h-4 text-[var(--color-secondary)]" />
-              Recent Movements
+              {t("dashboard.recent_movements")}
             </h3>
             <button className="text-xs text-[var(--color-primary)] font-semibold hover:underline">
-              View All
+              {t("common.view_all")}
             </button>
           </div>
           <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-4">
@@ -214,21 +214,21 @@ export function StockDashboardPage() {
           <div className="p-6 border-b border-white/5 flex justify-between items-center bg-[var(--surface-container-highest)]/20">
             <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-[var(--color-error)]" />
-              Critical Low Stock Alerts
+              {t("dashboard.critical_low_stock")}
             </h3>
             <span className="px-2 py-1 bg-[var(--color-error-container)] text-[var(--color-error)] rounded text-[10px] font-black">
-              12 CRITICAL
+              12 {t("dashboard.critical").toUpperCase()}
             </span>
           </div>
           <div className="flex-1 overflow-x-auto no-scrollbar">
             <table className="w-full text-left border-collapse">
               <thead className="bg-[var(--surface-container-lowest)]/50 text-[10px] text-[var(--color-outline)] uppercase font-black tracking-widest">
                 <tr>
-                  <th className="px-6 py-4">Item Name</th>
-                  <th className="px-6 py-4">Warehouse</th>
-                  <th className="px-6 py-4 text-center">Available</th>
-                  <th className="px-6 py-4 text-center">Threshold</th>
-                  <th className="px-6 py-4 text-right">Action</th>
+                  <th className="px-6 py-4">{t("dashboard.item_name")}</th>
+                  <th className="px-6 py-4">{t("dashboard.warehouse")}</th>
+                  <th className="px-6 py-4 text-center">{t("dashboard.available")}</th>
+                  <th className="px-6 py-4 text-center">{t("dashboard.threshold")}</th>
+                  <th className="px-6 py-4 text-right">{t("dashboard.action")}</th>
                 </tr>
               </thead>
               <tbody className="text-sm">
@@ -248,18 +248,18 @@ export function StockDashboardPage() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h3 className="text-sm font-bold text-white uppercase tracking-widest">
-              Stock Distribution by Category
+              {t("dashboard.stock_distribution")}
             </h3>
             <p className="text-xs text-[var(--color-outline)] mt-1">
-              Top 5 primary asset classifications across all warehouses.
+              {t("dashboard.distribution_desc")}
             </p>
           </div>
           <div className="flex items-center gap-4 text-[10px] font-bold uppercase text-[var(--color-outline)]">
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-1.5 bg-[var(--color-primary)] rounded-sm" /> On Hand
+              <span className="w-3 h-1.5 bg-[var(--color-primary)] rounded-sm" /> {t("common.on_hand")}
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-1.5 bg-[var(--color-secondary)] rounded-sm" /> Reserved
+              <span className="w-3 h-1.5 bg-[var(--color-secondary)] rounded-sm" /> {t("common.reserved")}
             </span>
           </div>
         </div>
@@ -326,6 +326,7 @@ function AlertRow({
   threshold: number;
   alt?: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <tr className={`hover:bg-white/5 transition-colors ${alt ? "bg-white/[0.02]" : ""}`}>
       <td className="px-6 py-4 font-bold text-white">{name}</td>
@@ -336,7 +337,7 @@ function AlertRow({
       <td className="px-6 py-4 text-center text-[var(--color-outline)]">{threshold.toLocaleString()}</td>
       <td className="px-6 py-4 text-right">
         <button className="text-[var(--color-primary)] text-xs font-bold uppercase tracking-tighter hover:bg-[var(--color-primary)]/10 px-3 py-1 rounded transition-colors">
-          Reorder
+          {t("common.reorder")}
         </button>
       </td>
     </tr>
@@ -354,12 +355,13 @@ function DistributionBar({
   percentage: number;
   reserved?: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
         <span className="text-sm font-medium text-white">{label}</span>
         <span className="text-xs font-bold text-[var(--color-outline)]">
-          {value.toLocaleString()} Units
+          {value.toLocaleString()} {t("common.units")}
         </span>
       </div>
       <div className="h-2 w-full bg-[var(--surface-container)] rounded-full overflow-hidden">

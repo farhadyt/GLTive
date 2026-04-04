@@ -18,7 +18,19 @@
     "access_denied": "Доступ запрещён",
     "access_denied_desc": "У вас нет прав для доступа к этой странице.",
     "not_found": "Страница не найдена",
-    "not_found_desc": "Запрашиваемая страница не существует."
+    "not_found_desc": "Запрашиваемая страница не существует.",
+    "view_all": "Показать все",
+    "this_week": "Эта неделя",
+    "units": "Единиц",
+    "on_hand": "В наличии",
+    "reserved": "Зарезервировано",
+    "reorder": "Заказать",
+    "global": "Глобально",
+    "danger": "Опасность",
+    "active": "Активно",
+    "support": "Поддержка",
+    "out": "Расход",
+    "in": "Приход"
   },
   "auth": {
     "login": "Войти в систему",
@@ -45,17 +57,43 @@
     "item_models": "Модели товаров",
     "items": "Складские позиции",
     "receive": "Приёмка",
+    "issue": "Выдача",
     "transfer": "Перемещение",
     "adjustments": "Корректировки",
     "alerts": "Оповещения",
     "movements": "История движений"
   },
   "shell": {
+    "app_title": "GLTive Менеджер Склада",
     "collapse_sidebar": "Свернуть панель",
     "expand_sidebar": "Развернуть панель",
     "dark_mode": "Тёмный режим",
     "light_mode": "Светлый режим",
     "language": "Язык",
-    "user_menu": "Меню пользователя"
+    "user_menu": "Меню пользователя",
+    "brand_subtitle": "Индустриальный Архитектор"
+  },
+  "dashboard": {
+    "live_feed": "Прямая связь: Синхронизировано",
+    "total_active_stock": "Общий активный запас",
+    "total_warehouses": "Всего складов",
+    "low_stock_alerts": "Оповещения о низком запасе",
+    "movements_title": "Движения",
+    "serialized_items": "Серийные позиции",
+    "scan_accuracy": "Точность сканирования",
+    "requires_procurement": "Требуется срочная закупка",
+    "recent_movements": "Последние движения",
+    "critical_low_stock": "Критические оповещения о запасах",
+    "critical": "Критических",
+    "stock_distribution": "Распределение запасов по категориям",
+    "distribution_desc": "Топ-5 основных классификаций активов по всем складам.",
+    "item_name": "Наименование",
+    "warehouse": "Склад",
+    "available": "Доступно",
+    "threshold": "Порог",
+    "action": "Действие",
+    "stock_in": "Поступление",
+    "stock_out": "Расход",
+    "adjustment": "Корректировка"
   }
 }

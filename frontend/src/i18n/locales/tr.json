@@ -18,7 +18,19 @@
     "access_denied": "Erişim Engellendi",
     "access_denied_desc": "Bu sayfaya erişim yetkiniz yoktur.",
     "not_found": "Sayfa Bulunamadı",
-    "not_found_desc": "Aradığınız sayfa mevcut değildir."
+    "not_found_desc": "Aradığınız sayfa mevcut değildir.",
+    "view_all": "Tümünü Gör",
+    "this_week": "Bu Hafta",
+    "units": "Adet",
+    "on_hand": "Eldeki",
+    "reserved": "Ayrılmış",
+    "reorder": "Yeniden Sipariş",
+    "global": "Küresel",
+    "danger": "Tehlike",
+    "active": "Aktif",
+    "support": "Destek",
+    "out": "Çıkış",
+    "in": "Giriş"
   },
   "auth": {
     "login": "Platforma Giriş",
@@ -45,17 +57,43 @@
     "item_models": "Ürün Modelleri",
     "items": "Stok Kalemleri",
     "receive": "Kabul",
+    "issue": "Çıkış",
     "transfer": "Transfer",
     "adjustments": "Düzeltmeler",
     "alerts": "Uyarılar",
     "movements": "Hareket Geçmişi"
   },
   "shell": {
+    "app_title": "GLTive Stok Yöneticisi",
     "collapse_sidebar": "Kenar çubuğunu daralt",
     "expand_sidebar": "Kenar çubuğunu genişlet",
     "dark_mode": "Karanlık mod",
     "light_mode": "Aydınlık mod",
     "language": "Dil",
-    "user_menu": "Kullanıcı menüsü"
+    "user_menu": "Kullanıcı menüsü",
+    "brand_subtitle": "Endüstriyel Mimar"
+  },
+  "dashboard": {
+    "live_feed": "Canlı Akış: Senkronize",
+    "total_active_stock": "Toplam Aktif Stok",
+    "total_warehouses": "Toplam Depo",
+    "low_stock_alerts": "Düşük Stok Uyarıları",
+    "movements_title": "Hareketler",
+    "serialized_items": "Seri Numaralı Kalemler",
+    "scan_accuracy": "Tarama Doğruluğu",
+    "requires_procurement": "Acil tedarik gerekli",
+    "recent_movements": "Son Hareketler",
+    "critical_low_stock": "Kritik Düşük Stok Uyarıları",
+    "critical": "Kritik",
+    "stock_distribution": "Kategoriye Göre Stok Dağılımı",
+    "distribution_desc": "Tüm depolardaki en önemli 5 varlık sınıflandırması.",
+    "item_name": "Kalem Adı",
+    "warehouse": "Depo",
+    "available": "Mevcut",
+    "threshold": "Eşik",
+    "action": "İşlem",
+    "stock_in": "Stok Girişi",
+    "stock_out": "Stok Çıkışı",
+    "adjustment": "Düzeltme"
   }
 }

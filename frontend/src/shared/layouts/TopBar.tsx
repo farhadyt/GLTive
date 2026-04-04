@@ -12,7 +12,7 @@ export function TopBar() {
     <header className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between px-6 glass h-[56px] border-b border-white/5 shadow-2xl shadow-black/20">
       <div className="flex items-center gap-4">
         <span className="text-lg font-bold tracking-tighter text-white">
-          GLTive Stock Manager
+          {t("shell.app_title")}
         </span>
       </div>
       <div className="flex items-center gap-2">

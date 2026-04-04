@@ -18,7 +18,19 @@
     "access_denied": "Access Denied",
     "access_denied_desc": "You do not have permission to access this page.",
     "not_found": "Page Not Found",
-    "not_found_desc": "The page you are looking for does not exist."
+    "not_found_desc": "The page you are looking for does not exist.",
+    "view_all": "View All",
+    "this_week": "This Week",
+    "units": "Units",
+    "on_hand": "On Hand",
+    "reserved": "Reserved",
+    "reorder": "Reorder",
+    "global": "Global",
+    "danger": "Danger",
+    "active": "Active",
+    "support": "Support",
+    "out": "Out",
+    "in": "In"
   },
   "auth": {
     "login": "Access Platform",
@@ -45,17 +57,43 @@
     "item_models": "Item Models",
     "items": "Stock Items",
     "receive": "Receive",
+    "issue": "Issue",
     "transfer": "Transfer",
     "adjustments": "Adjustments",
     "alerts": "Alerts",
     "movements": "Movement History"
   },
   "shell": {
+    "app_title": "GLTive Stock Manager",
     "collapse_sidebar": "Collapse sidebar",
     "expand_sidebar": "Expand sidebar",
     "dark_mode": "Dark mode",
     "light_mode": "Light mode",
     "language": "Language",
-    "user_menu": "User menu"
+    "user_menu": "User menu",
+    "brand_subtitle": "Industrial Architect"
+  },
+  "dashboard": {
+    "live_feed": "Live Feed: Synced",
+    "total_active_stock": "Total Active Stock",
+    "total_warehouses": "Total Warehouses",
+    "low_stock_alerts": "Low Stock Alerts",
+    "movements_title": "Movements",
+    "serialized_items": "Serialized Items",
+    "scan_accuracy": "Scan Accuracy",
+    "requires_procurement": "Requires immediate procurement",
+    "recent_movements": "Recent Movements",
+    "critical_low_stock": "Critical Low Stock Alerts",
+    "critical": "Critical",
+    "stock_distribution": "Stock Distribution by Category",
+    "distribution_desc": "Top 5 primary asset classifications across all warehouses.",
+    "item_name": "Item Name",
+    "warehouse": "Warehouse",
+    "available": "Available",
+    "threshold": "Threshold",
+    "action": "Action",
+    "stock_in": "Stock In",
+    "stock_out": "Stock Out",
+    "adjustment": "Adjustment"
   }
 }

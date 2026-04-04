@@ -65,7 +65,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
                 GLTive Stock
               </h2>
               <p className="text-[0.65rem] text-[var(--color-outline)] font-bold uppercase tracking-widest">
-                Industrial Architect
+                {t("shell.brand_subtitle")}
               </p>
             </div>
           )}
